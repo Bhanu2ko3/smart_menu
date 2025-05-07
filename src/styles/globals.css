@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* light mode */
+:root {
+  --bg-color: white;
+  --text-color: black;
+  --button-bg: #f0f0f0;
+  --button-test-color: #464646;
+  --button-hover-bg: #e0e0e0;
+}
+
+/* Dark mode */
+html.dark {
+  --bg-color: linear-gradient(to right, #000000, #0000ff);
+  --text-color: rgb(165, 165, 165);
+  --button-bg: #333333;
+  --button-test-color: #ffffff;
+  --button-hover-bg: #444444;
+}
+
+body {
+  background: var(--bg-color);
+}
+
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+  background-color: var(--button-bg);
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: var(--button-hover-bg);
+}
