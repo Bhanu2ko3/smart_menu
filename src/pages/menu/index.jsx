@@ -11,37 +11,43 @@ const MenuPage = () => {
     {
       id: 1,
       name: 'Appetizers',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174060.png',
+      image: '',
       items: 12
     },
     {
       id: 2,
       name: 'Main Courses',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174155.png',
+      image: '',
       items: 20
     },
     {
       id: 3,
       name: 'Desserts',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174065.png',
+      image: '',
       items: 15
     },
     {
       id: 4,
       name: 'Beverages',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174067.png',
+      image: '',
       items: 18
     },
     {
       id: 5,
       name: 'Salads',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174157.png',
+      image: '',
       items: 10
     },
     {
       id: 6,
-      name: 'Specials',
-      image: 'https://cdn-icons-png.flaticon.com/512/3174/3174160.png',
+      name: 'Snacks',
+      image: '',
+      items: 8
+    },
+    {
+      id: 7,
+      name: 'Drinks',
+      image: '',
       items: 8
     }
   ];
