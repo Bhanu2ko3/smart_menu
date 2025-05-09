@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { foodCategories } from "../data/foodData";
+import { foodCategories, allFoods } from "../data/foodData";
 
 const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -63,9 +63,11 @@ const MenuPage = () => {
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                     {category.name}
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {category.items} items
-                  </p>
+                 <p className="text-gray-600 dark:text-gray-300">
+                  {
+                    allFoods.filter((food) => food.categoryId === category.id).length
+                  } items
+                </p>
                 </div>
               </div>
               <div className="flex justify-end">
