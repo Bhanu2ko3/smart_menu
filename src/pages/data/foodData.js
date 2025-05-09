@@ -1,4 +1,4 @@
-const foodCategories = [
+export const foodCategories = [
   { id: 1, name: "Appetizers", image: "", items: 12 },
   { id: 2, name: "Main Courses", image: "", items: 20 },
   { id: 3, name: "Desserts", image: "", items: 15 },
@@ -8,7 +8,7 @@ const foodCategories = [
   { id: 7, name: "Drinks", image: "", items: 8 },
 ];
 
-const allFoods = [
+export const allFoods = [
   { id: 1, name: "Spring Rolls", categoryId: 1 },
   { id: 2, name: "Chicken Wings", categoryId: 1 },
   { id: 3, name: "Steak", categoryId: 2 },
@@ -18,5 +18,3 @@ const allFoods = [
   { id: 7, name: "Coke", categoryId: 4 },
   { id: 8, name: "Orange Juice", categoryId: 4 },
 ];
-
-export default foodCategories;

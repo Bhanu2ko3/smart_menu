@@ -1,22 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import foodCategories from "../../data/foodCategories";
-
+import { foodCategories } from "../data/foodData";
 
 const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-
-  const foodCategories = [
-    { id: 1, name: "Appetizers", image: "", items: 12 },
-    { id: 2, name: "Main Courses", image: "", items: 20 },
-    { id: 3, name: "Desserts", image: "", items: 15 },
-    { id: 4, name: "Beverages", image: "", items: 18 },
-    { id: 5, name: "Salads", image: "", items: 10 },
-    { id: 6, name: "Snacks", image: "", items: 8 },
-    { id: 7, name: "Drinks", image: "", items: 8 },
-  ];
 
   const filteredCategories = foodCategories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
