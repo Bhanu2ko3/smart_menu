@@ -10,6 +10,7 @@ export const foodCategories = [
 
 export const allFoods = [
   // Appetizers - categoryId: 1
+  
   { id: 1, name: "Spring Rolls", categoryId: 1, price: 7.99, description: "Fresh vegetables wrapped in a thin pastry, served with sweet chili sauce", rating: 4.5, origin: "Asian", prepTime: "Quick (under 15 min)", availability: "In Stock", dietary: ["Vegetarian"], calories: 320, protein: 8, carbs: 42, fats: 16, flavorProfile: "Savory", spiceLevel: "Mild", ingredients: "cabbage, carrots, bean sprouts, garlic, pastry wrapper", servingSize: "4 pieces", tags: "asian, appetizer, fried" },
   { id: 2, name: "Chicken Wings", categoryId: 1, price: 9.99, description: "Crispy fried wings tossed in buffalo sauce", rating: 4.8, origin: "American", prepTime: "Medium (15–30 min)", availability: "In Stock", dietary: [], calories: 450, protein: 30, carbs: 12, fats: 28, flavorProfile: "Spicy", spiceLevel: "Medium", ingredients: "chicken wings, buffalo sauce, butter, garlic powder", servingSize: "8 pieces", tags: "party, american, finger food" },
   { id: 3, name: "Bruschetta", categoryId: 1, price: 8.50, description: "Toasted bread topped with tomatoes, basil, and garlic", rating: 4.3, origin: "Italian", prepTime: "Quick (under 15 min)", availability: "In Stock", dietary: ["Vegetarian"], calories: 220, protein: 6, carbs: 30, fats: 8, flavorProfile: "Savory", spiceLevel: "Mild", ingredients: "bread, tomatoes, basil, garlic, olive oil", servingSize: "4 pieces", tags: "italian, appetizer, fresh" },

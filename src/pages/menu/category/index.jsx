@@ -23,7 +23,7 @@ const CategoryFoodsPage = () => {
     }
     setCurrentCategory(category);
 
-    // Filter foods by category and applied filters
+    // Filter foods by category / applied filters
     let filteredFoods = allFoods.filter((food) => food.categoryId == categoryId);
 
     if (filters) {

@@ -13,6 +13,7 @@ export default function DarkModeToggle() {
       document.documentElement.classList.add("dark");
     }
   }, []);
+  // Toggle dark mode and update localStorage
 
   useEffect(() => {
     if (darkMode) {
