@@ -1,10 +1,12 @@
 import "@/styles/globals.css";
 import DarkModeToggle from "@/components/DarkModeToggle";
+import BackButton from "@/components/BackButton";
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <DarkModeToggle /> {/* මෙතන දැමුවාම හරියට සියලුම පිටු වල පෙන්නයි */}
+      <BackButton />
+      <DarkModeToggle /> 
       <Component {...pageProps} />
     </>
   );

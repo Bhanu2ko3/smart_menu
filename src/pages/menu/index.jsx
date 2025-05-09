@@ -1,58 +1,59 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import BackButton from "@/components/BackButton";
 
 const MenuPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
   const foodCategories = [
     {
       id: 1,
-      name: 'Appetizers',
-      image: '',
-      items: 12
+      name: "Appetizers",
+      image: "",
+      items: 12,
     },
     {
       id: 2,
-      name: 'Main Courses',
-      image: '',
-      items: 20
+      name: "Main Courses",
+      image: "",
+      items: 20,
     },
     {
       id: 3,
-      name: 'Desserts',
-      image: '',
-      items: 15
+      name: "Desserts",
+      image: "",
+      items: 15,
     },
     {
       id: 4,
-      name: 'Beverages',
-      image: '',
-      items: 18
+      name: "Beverages",
+      image: "",
+      items: 18,
     },
     {
       id: 5,
-      name: 'Salads',
-      image: '',
-      items: 10
+      name: "Salads",
+      image: "",
+      items: 10,
     },
     {
       id: 6,
-      name: 'Snacks',
-      image: '',
-      items: 8
+      name: "Snacks",
+      image: "",
+      items: 8,
     },
     {
       id: 7,
-      name: 'Drinks',
-      image: '',
-      items: 8
-    }
+      name: "Drinks",
+      image: "",
+      items: 8,
+    },
   ];
 
-  const filteredCategories = foodCategories.filter(category =>
+  const filteredCategories = foodCategories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -62,18 +63,11 @@ const MenuPage = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 transition-colors duration-300">
+    <div className="min-h-screen p-4  md:pl-8 md:pr-8 md:pb-8 transition-colors duration-300">
       {/* Header with back button and title */}
       <header className="flex items-center mb-8">
-        <button 
-          onClick={() => router.back()}
-          className="p-2 rounded-full bg-white shadow mr-4 hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </button>
-        <h1 className="text-3xl font-bold">Our Menu</h1>
+        
+        <h1 className="text-3xl ml-10 font-bold">Our Menu</h1>
       </header>
 
       {/* Search Bar */}
