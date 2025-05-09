@@ -33,10 +33,12 @@ const CategoryFoodsPage = () => {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">
-        Foods in Category {categoryId}
-      </h1>
+    <div className="min-h-screen p-4 md:pl-8 md:pr-8 md:pb-8 transition-colors duration-300">
+      <header className="flex items-center mb-8">
+        <h1 className="text-3xl ml-10 font-bold">
+          Foods in Category {categoryId}
+        </h1>
+      </header>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {foods.map((food) => (
           <div
