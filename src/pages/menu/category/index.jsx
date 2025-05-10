@@ -203,7 +203,7 @@ const CategoryFoodsPage = () => {
         onFiltersChange={handleFiltersChange}
       />
 
-      <div className="flex-1 p-4 md:p-8 ml-20 sm:ml-72">
+      <div className="flex-1 p-4 md:p-8 ml-20 ">
         <header className="flex items-center mb-8">
           <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
         </header>

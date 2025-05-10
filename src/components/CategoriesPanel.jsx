@@ -381,17 +381,11 @@ const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = ()
   ]);
 
   return (
-    <div className={`transition-all duration-300 ${isExpanded ? "w-72" : "w-20"}`}>
+    <div className={`transition-all duration-300 ${isExpanded ? "" : ""}`}>
       <div className="fixed h-screen overflow-y-auto">
         <div className="bg-white dark:bg-gray-800 h-full rounded-r-3xl shadow-xl p-5">
           <div className="flex justify-between items-center mb-6">
-            <h2
-              className={`font-bold text-xl transition-opacity duration-300 ${
-                isExpanded ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              Categories
-            </h2>
+            
             <button
               onClick={toggleExpand}
               className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
