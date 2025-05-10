@@ -1,9 +1,11 @@
 "use client";
-import { allFoods, foodCategories } from "../../data/foodData";
+
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import CategoriesPanel from "@/components/CategoriesPanel";
 import useFoodFiltering from "../../hooks/useFoodFiltering";
+import FoodCard from "@/components/FoodCard";
+import { foodCategories } from "../../data/foodData";
 
 const CategoryFoodsPage = () => {
   const searchParams = useSearchParams();
@@ -41,29 +43,14 @@ const CategoryFoodsPage = () => {
         onFiltersChange={handleFiltersChange}
       />
 
-      <div className="flex-1 p-4 md:p-8 ml-20 ">
+      <div className="flex-1 p-4 md:p-8 ml-20">
         <header className="flex items-center mb-8">
           <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {foods.map((food) => (
-            <div
-              key={food.id}
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <h2 className="text-xl font-semibold mb-2">{food.name}</h2>
-              {food.description && (
-                <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-                  {food.description}
-                </p>
-              )}
-              {food.price && (
-                <div className="text-blue-600 dark:text-blue-400 font-medium">
-                  ${food.price.toFixed(2)}
-                </div>
-              )}
-            </div>
+            <FoodCard key={food.id} food={food} />
           ))}
         </div>
 
