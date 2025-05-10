@@ -1,5 +1,5 @@
 export const foodCategories = [
-  { id: 1, name: "Appetizers", image: "", items: 15 },
+  { id: 1, name: "Appetizers", image: "/images/Appetizers.jpeg", items: 15 },
   { id: 2, name: "Main Courses", image: "", items: 15 },
   { id: 3, name: "Desserts", image: "", items: 15 },
   { id: 4, name: "Beverages", image: "", items: 15 },

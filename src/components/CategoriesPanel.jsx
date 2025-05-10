@@ -3,9 +3,19 @@ import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
 // Reusable UI components (should be moved to separate files in production)
-const InputField = ({ label, placeholder, value, onChange, type = "text", id, min }) => (
+const InputField = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+  id,
+  min,
+}) => (
   <div className="space-y-1">
-    <label htmlFor={id} className="text-sm font-medium">{label}</label>
+    <label htmlFor={id} className="text-sm font-medium">
+      {label}
+    </label>
     <input
       type={type}
       id={id}
@@ -19,7 +29,14 @@ const InputField = ({ label, placeholder, value, onChange, type = "text", id, mi
   </div>
 );
 
-const RangeField = ({ label, minValue, maxValue, onMinChange, onMaxChange, idPrefix }) => (
+const RangeField = ({
+  label,
+  minValue,
+  maxValue,
+  onMinChange,
+  onMaxChange,
+  idPrefix,
+}) => (
   <div className="space-y-1">
     <label className="text-sm font-medium">{label}</label>
     <div className="flex space-x-2">
@@ -49,7 +66,9 @@ const RangeField = ({ label, minValue, maxValue, onMinChange, onMaxChange, idPre
 
 const SelectField = ({ label, options, value, onChange, id }) => (
   <div className="space-y-1">
-    <label htmlFor={id} className="text-sm font-medium">{label}</label>
+    <label htmlFor={id} className="text-sm font-medium">
+      {label}
+    </label>
     <select
       id={id}
       className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg"
@@ -58,7 +77,10 @@ const SelectField = ({ label, options, value, onChange, id }) => (
       aria-label={label}
     >
       {options.map((opt) => (
-        <option key={opt} value={opt === "Any" || opt === "Any Time" ? "" : opt}>
+        <option
+          key={opt}
+          value={opt === "Any" || opt === "Any Time" ? "" : opt}
+        >
           {opt}
         </option>
       ))}
@@ -86,9 +108,13 @@ const CheckboxGroup = ({ label, options, values, onChange }) => (
   </div>
 );
 
-const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = () => {} }) => {
+const CategoriesPanel = ({
+  activeCategory,
+  categories = [],
+  onFiltersChange = () => {},
+}) => {
   const [searchType, setSearchType] = useState("simple");
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Simple filters
   const [nameFilter, setNameFilter] = useState("");
@@ -258,7 +284,12 @@ const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = ()
             />
             <SelectField
               label="Preparation Time"
-              options={["Any Time", "Quick (under 15 min)", "Medium (15–30 min)", "Long (30+ min)"]}
+              options={[
+                "Any Time",
+                "Quick (under 15 min)",
+                "Medium (15–30 min)",
+                "Long (30+ min)",
+              ]}
               value={prepTime}
               onChange={(e) => setPrepTime(e.target.value)}
               id="prep-time"
@@ -277,7 +308,14 @@ const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = ()
           <div className="space-y-3 mt-4">
             <CheckboxGroup
               label="Dietary Preferences"
-              options={["Vegan", "Vegetarian", "Gluten-Free", "Keto", "Organic", "Dairy-Free"]}
+              options={[
+                "Vegan",
+                "Vegetarian",
+                "Gluten-Free",
+                "Keto",
+                "Organic",
+                "Dairy-Free",
+              ]}
               values={dietaryPreferences}
               onChange={handleDietaryChange}
             />
@@ -315,7 +353,15 @@ const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = ()
             />
             <SelectField
               label="Flavor Profile"
-              options={["Any", "Sweet", "Savory", "Spicy", "Sour", "Bitter", "Umami"]}
+              options={[
+                "Any",
+                "Sweet",
+                "Savory",
+                "Spicy",
+                "Sour",
+                "Bitter",
+                "Umami",
+              ]}
               value={flavorProfile}
               onChange={(e) => setFlavorProfile(e.target.value)}
               id="flavor-profile"
@@ -381,71 +427,78 @@ const CategoriesPanel = ({ activeCategory, categories = [], onFiltersChange = ()
   ]);
 
   return (
-    <div className={`transition-all duration-300 ${isExpanded ? "w-72" : "w-20"}`}>
-      <div className="fixed h-screen overflow-y-auto">
-        <div className="bg-white dark:bg-gray-800 h-full rounded-r-3xl shadow-xl p-5">
-          <div className="flex justify-between items-center mb-6">
-            <h2
-              className={`font-bold text-xl transition-opacity duration-300 ${
-                isExpanded ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              Categories
-            </h2>
+    <div
+      className={`transition-all duration-300 ${
+        isExpanded ? "w" : "w"
+      } relative`}
+    >
+      <div className="fixed top-20 left-3 sm:left-3 mr-3 h-[calc(100vh-6rem)]">
+        <div className="bg-white dark:bg-gray-800 h-full rounded-4xl border-2 shadow-xl flex flex-col p-4 sm:p-5 overflow-hidden">
+          {/* Toggle Button */}
+          <div className="flex justify-end mb-4">
             <button
               onClick={toggleExpand}
-              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
               aria-label={isExpanded ? "Collapse panel" : "Expand panel"}
             >
-              {isExpanded ? (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l-7 7 7 7" />
-                </svg>
-              )}
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={isExpanded ? "M15 19l-7-7 7-7" : "M9 5l-7 7 7 7"}
+                />
+              </svg>
             </button>
           </div>
 
+          {/* Scrollable Content */}
           {isExpanded && (
-            <>
-              <div className="mb-4">
-                <div className="flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl">
-                  {["simple", "medium", "healthy"].map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => setSearchType(type)}
-                      className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-                        searchType === type ? "bg-white dark:bg-gray-600 shadow-sm" : ""
-                      }`}
-                      aria-pressed={searchType === type}
-                    >
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </button>
-                  ))}
-                </div>
+            <div className="flex-1 overflow-y-auto pr-1 sm:pr-2">
+              <div className="mb-4 flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl">
+                {["simple", "medium", "healthy"].map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSearchType(type)}
+                    className={`flex-1 mx-0.5 py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
+                      searchType === type
+                        ? "bg-white dark:bg-gray-600 shadow-sm"
+                        : ""
+                    }`}
+                    aria-pressed={searchType === type}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </button>
+                ))}
               </div>
 
+              {/* Dynamic search fields */}
               {renderSearchFields}
+            </div>
+          )}
 
-              <div className="mt-6 space-y-2">
-                <button
-                  onClick={applyFilters}
-                  className="w-full bg-blue-600 text-white hover:bg-blue-700 py-2 px-4 rounded-lg font-medium transition-colors"
-                >
-                  Apply Filters
-                </button>
-                <button
-                  onClick={resetFilters}
-                  className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-lg font-medium transition-colors"
-                >
-                  Reset Filters
-                </button>
-              </div>
-            </>
-          )}      
+          {/* Bottom Buttons */}
+          {isExpanded && (
+            <div className="mt-4 pt-4 border-t dark:border-gray-700 space-y-2">
+              <button
+                onClick={applyFilters}
+                className="w-full bg-blue-600 text-white hover:bg-blue-700 py-2 px-4 rounded-lg font-medium transition"
+              >
+                Apply Filters
+              </button>
+              <button
+                onClick={resetFilters}
+                className="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-lg font-medium transition"
+              >
+                Reset Filters
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
