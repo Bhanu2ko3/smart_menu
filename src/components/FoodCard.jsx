@@ -1,3 +1,6 @@
+"use client";
+import Link from "next/link";
+
 const FoodCard = ({ food }) => {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
@@ -26,10 +29,12 @@ const FoodCard = ({ food }) => {
         </div>
       )}
 
-      {/* View Food Button */}
-      <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mt-auto flex-shrink-0">
-        View Food
-      </button>
+      {/* View Food Button with Link to /view */}
+      <Link href={`/view?foodId=${food.id}`}>
+        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mt-auto flex-shrink-0">
+          View Food
+        </button>
+      </Link>
     </div>
   );
 };
