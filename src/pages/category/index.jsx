@@ -1,5 +1,5 @@
 "use client";
-import { allFoods, foodCategories } from "../data/foodData";
+import { allFoods, foodCategories } from "../../data/foodData";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoriesPanel from "@/components/CategoriesPanel";

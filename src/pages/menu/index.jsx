@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { foodCategories, allFoods } from "../data/foodData";
+import { foodCategories, allFoods } from "../../data/foodData";
 
 const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
