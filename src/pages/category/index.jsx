@@ -3,6 +3,7 @@ import { allFoods, foodCategories } from "../../data/foodData";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoriesPanel from "@/components/CategoriesPanel";
+import FoodCard from "@/components/FoodCard";
 
 const CategoryFoodsPage = () => {
   const searchParams = useSearchParams();
@@ -210,22 +211,7 @@ const CategoryFoodsPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {foods.map((food) => (
-            <div
-              key={food.id}
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <h2 className="text-xl font-semibold mb-2">{food.name}</h2>
-              {food.description && (
-                <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
-                  {food.description}
-                </p>
-              )}
-              {food.price && (
-                <div className="text-blue-600 dark:text-blue-400 font-medium">
-                  ${food.price.toFixed(2)}
-                </div>
-              )}
-            </div>
+            <FoodCard key={food.id} food={food} />
           ))}
         </div>
 
