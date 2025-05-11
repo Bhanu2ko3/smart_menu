@@ -3,9 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import { allFoods } from "../../data/foodData";
 import Image from "next/image";
-import { useCart } from '../../contexts/CartContext';
+import { useCart } from "../../contexts/CartContext";
 
-export default function FoodOverview( {item} ) {
+export default function FoodOverview({ item }) {
   const searchParams = useSearchParams();
   const foodId = searchParams.get("foodId");
   const { addToCart } = useCart();
@@ -28,13 +28,13 @@ export default function FoodOverview( {item} ) {
     );
   }
 
-  const handleAddToCart = () => {
+  const AddToCart = () => {
     addToCart({
       id: food.id,
       name: food.name,
       price: food.price,
-      image: food.image || '/default-food.jpg',
-      description: food.description
+      image: food.image || "",
+      description: food.description,
     });
   };
 
@@ -63,8 +63,8 @@ export default function FoodOverview( {item} ) {
         {/* Food Details */}
         <div className="w-full md:w-1/2">
           <div className="flex justify-between items-start">
-            <h1 className="text-3xl font-bold text-gray-800">{food.name}</h1>
-            <div className="flex items-center bg-primary text-white px-3 py-1 rounded-full">
+            <h1 className="text-3xl font-bold ">{food.name}</h1>
+            <div className="flex items-center bg-primary  px-3 py-1 rounded-full">
               <span className="text-sm font-medium">{food.rating}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -77,11 +77,11 @@ export default function FoodOverview( {item} ) {
             </div>
           </div>
 
-          <p className="text-gray-500 mt-1">
+          <p className=" mt-1">
             {food.origin} • {food.prepTime}
           </p>
 
-          <p className="text-gray-600 mt-4">{food.description}</p>
+          <p className=" mt-4">{food.description}</p>
 
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex justify-between items-center mb-2">
@@ -122,7 +122,7 @@ export default function FoodOverview( {item} ) {
               View in AR
             </button>
             <button
-              onClick={() => addToCart(item)}
+              onClick={AddToCart}
               className="flex-1 bg-primary text-white py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors duration-300 shadow-md"
             >
               <svg
