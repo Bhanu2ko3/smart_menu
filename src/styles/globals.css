@@ -11,7 +11,7 @@
 
 /* Dark mode */
 html.dark {
-  --bg-color: linear-gradient(to right, #000000, #0000ff);
+  --bg-color: linear-gradient(to right, #7d0000, #086e15);
   --text-color: rgb(165, 165, 165);
   --button-bg: #333333;
   --button-test-color: #ffffff;

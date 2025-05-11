@@ -3,9 +3,9 @@ import Link from "next/link";
 
 const FoodCard = ({ food }) => {
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-[450px]">
+    <div className="dark:bg-gray-800 p-6 rounded-4xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-[380px]">
       {/* Image Placeholder */}
-      <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 flex items-center justify-center flex-shrink-0">
+      <div className="h-48 dark:bg-gray-700 rounded-4xl mb-4 flex items-center justify-center flex-shrink-0">
         {food.image ? (
           <img
             src={food.image}
@@ -18,23 +18,28 @@ const FoodCard = ({ food }) => {
       </div>
 
       <h2 className="text-xl font-semibold mb-2 flex-shrink-0">{food.name}</h2>
-      {food.description && (
-        <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-4 flex-grow overflow-auto">
-          {food.description}
-        </p>
-      )}
+
       {food.price && (
-        <div className="text-blue-600 dark:text-blue-400 font-medium mb-4 flex-shrink-0">
+        <div className="flex items-center dark:text-blue-400 font-medium mb-4 flex-shrink-0">
+          
           ${food.price.toFixed(2)}
+          {/* Rating Stars */}
+          <div className="flex text-yellow-400 ml-25">
+            {Array.from({ length: 5 }, (_, index) => (
+              <span key={index}>
+                {index < Math.round(food.rating) ? "⭐" : "☆"}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
       {/* View Food Button with Link to /view */}
-      <Link href={`/view?foodId=${food.id}`}>
-        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 mt-auto flex-shrink-0">
+      <Link href={`/foodOverview?foodId=${food.id}`}>
+        <button className="w-full py-2 rounded-4xl border-2 transition-colors duration-200 mt-auto flex-shrink-0">
           View Food
         </button>
-      </Link>
+      </Link> 
     </div>
   );
 };

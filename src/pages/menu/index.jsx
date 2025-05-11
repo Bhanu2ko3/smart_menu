@@ -12,7 +12,7 @@ const MenuPage = () => {
   );
 
   const handleCategoryClick = (categoryId) => {
-    router.push(`/category?categoryId=${categoryId}`);
+    router.push(`/foods?categoryId=${categoryId}`);
   };
 
   return (
@@ -27,7 +27,7 @@ const MenuPage = () => {
           placeholder="Search categories..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-4 pl-12 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+          className="w-full p-4 pl-12 rounded-4xl shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:text-white dark:border-gray-700"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ const MenuPage = () => {
           <div
             key={category.id}
             onClick={() => handleCategoryClick(category.id)}
-            className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+            className="relative bg-white dark:bg-gray-800 rounded-4xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
           >
             {/* Image */}
             <img

@@ -2,7 +2,7 @@
 import { allFoods, foodCategories } from "../../data/foodData";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import CategoriesPanel from "@/components/CategoriesPanel";
+import CategoriesPanel from "@/components/foodFilterPanel";
 import FoodCard from "@/components/FoodCard";
 
 const CategoryFoodsPage = () => {
@@ -205,7 +205,7 @@ const CategoryFoodsPage = () => {
       />
 
       <div className="flex-1 p-4 md:p-8 ml-20 ">
-        <header className="flex items-center mb-8">
+        <header className="flex justify-center mr-12 items-center mb-8">
           <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
         </header>
 
@@ -221,7 +221,7 @@ const CategoryFoodsPage = () => {
               No foods found for this category.
             </p>
             <p className="text-gray-400 dark:text-gray-500">
-              Try adjusting your filters or selecting a different category.
+              Try adjusting your filters or selecting a different category. 
             </p>
           </div>
         )}
