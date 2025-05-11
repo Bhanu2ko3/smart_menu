@@ -8,7 +8,7 @@ export default function BackButton() {
   return (
     <button
       onClick={() => router.back()}
-      className="fixed top-4 left-4 z-50 p-2 rounded-full border-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+      className="fixed top-4 left-4 z-50 p-2 rounded-full border-2  "
       aria-label="Go Back"
     >
       <svg

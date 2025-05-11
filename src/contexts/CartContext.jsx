@@ -1,18 +1,8 @@
-// src/contexts/CartContext.jsx
-'use client';
-
 import { createContext, useContext, useState } from 'react';
 
-// 1. First create the context with proper typing
-const CartContext = createContext({
-  cartItems: [],
-  cartCount: 0,
-  addToCart: () => {},
-  removeFromCart: () => {},
-  updateQuantity: () => {},
-});
+// 1. Create empty context
+const CartContext = createContext(null); // <-- FIX
 
-// 2. Create the provider component
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
@@ -42,7 +32,7 @@ export function CartProvider({ children }) {
     });
   };
 
-  const updateQuantity = (id, newQuantity) => {
+  const updateQuantity = (id, newQuantity) => { 
     setCartItems(prevItems => {
       return prevItems.map(item => 
         item.id === id 
@@ -67,10 +57,9 @@ export function CartProvider({ children }) {
   );
 }
 
-// 3. Create the custom hook
 export function useCart() {
   const context = useContext(CartContext);
-  if (!context) {
+  if (context === null) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;

@@ -1,42 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useCart } from "../../contexts/CartContext";
 import Link from "next/link";
 import Image from "next/image";
 import { FaCcVisa, FaCcMastercard, FaPaypal, FaApplePay } from "react-icons/fa";
 
 export default function CartPage() {
-  // Sample cart data
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Spring Rolls",
-      price: 7.99,
-      quantity: 2,
-      image: "",
-      description: "Fresh vegetables wrapped in thin pastry",
-      dietary: "Vegetarian",
-    },
-    {
-      id: 2,
-      name: "Pad Thai",
-      price: 12.99,
-      quantity: 1,
-      image: "",
-      description: "Stir-fried rice noodles with eggs and tofu",
-      dietary: "Vegetarian",
-    },
-    {
-      id: 3,
-      name: "Green Curry",
-      price: 14.99,
-      quantity: 1,
-      image: "",
-      description: "Spicy coconut milk curry with vegetables",
-      dietary: "Gluten Free",
-    },
-  ]);
-
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   // Calculate totals
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -47,18 +17,14 @@ export default function CartPage() {
   const total = subtotal + tax + deliveryFee;
 
   // Update quantity
-  const updateQuantity = (id, newQuantity) => {
+  const handleQuantityChange = (id, newQuantity) => {
     if (newQuantity < 1) return;
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    updateQuantity(id, newQuantity); // <-- USE CONTEXT FUNCTION
   };
 
   // Remove item
   const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    removeFromCart(id); // <-- USE CONTEXT FUNCTION
   };
 
   return (
@@ -121,7 +87,7 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2">
-              <div className="bg-white shadow rounded-lg overflow-hidden">
+              <div className="bg-white shadow rounded-4xl overflow-hidden">
                 <ul className="divide-y divide-gray-200">
                   {cartItems.map((item) => (
                     <li key={item.id} className="p-4 sm:p-6">
@@ -161,13 +127,13 @@ export default function CartPage() {
                           </div>
 
                           {/* Quantity Controls */}
-                          <div className="mt-4 flex items-center justify-between">
-                            <div className="flex items-center border border-gray-300 rounded-md">
+                          <div className="mt-4 flex items-center justify-between ">
+                            <div className="flex items-center border border-gray-300 rounded-4xl">
                               <button
                                 onClick={() =>
                                   updateQuantity(item.id, item.quantity - 1)
                                 }
-                                className="px-3 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                                className="px-3 py-1 rounded-4xl bg-red-500  hover:bg-red-600 transition"
                               >
                                 -
                               </button>
@@ -178,11 +144,12 @@ export default function CartPage() {
                                 onClick={() =>
                                   updateQuantity(item.id, item.quantity + 1)
                                 }
-                                className="px-3 py-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                                className="px-3 py-1 rounded-4xl bg-green-500  hover:bg-green-600 transition"
                               >
                                 +
                               </button>
                             </div>
+
                             <button
                               onClick={() => removeItem(item.id)}
                               className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
@@ -288,23 +255,24 @@ export default function CartPage() {
 
                 {/* Payment Methods */}
                 <div className="mt-6">
-      <h3 className="text-xs font-medium text-gray-500 mb-2">WE ACCEPT</h3>
-      <div className="flex space-x-4 text-3xl text-blue-500">
-        <div className="flex-shrink-0">
-          <FaCcVisa />
-        </div>
-        <div className="flex-shrink-0">
-          <FaCcMastercard />
-        </div>
-        <div className="flex-shrink-0">
-          <FaPaypal />
-        </div>
-        <div className="flex-shrink-0">
-          <FaApplePay />
-        </div>
-      </div>
-    </div>
-      
+                  <h3 className="text-xs font-medium text-gray-500 mb-2">
+                    WE ACCEPT
+                  </h3>
+                  <div className="flex space-x-4 text-3xl text-blue-500">
+                    <div className="flex-shrink-0">
+                      <FaCcVisa />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <FaCcMastercard />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <FaPaypal />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <FaApplePay />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Safety Info */}
