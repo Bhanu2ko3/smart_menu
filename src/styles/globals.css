@@ -4,16 +4,16 @@
 :root {
   --bg-color: white;
   --text-color: black;
-  --button-bg: #f0f0f0;
+  --button-bg-color: #0066f6;
   --button-test-color: #464646;
   --button-hover-bg: #e0e0e0;
 }
 
 /* Dark mode */
 html.dark {
-  --bg-color: linear-gradient(to right, #000000, #0000ff);
+  --bg-color: linear-gradient(to right, #242424, #2f2f2f);
   --text-color: rgb(165, 165, 165);
-  --button-bg: #333333;
+  --button-bg-color: #4b5563;
   --button-test-color: #ffffff;
   --button-hover-bg: #444444;
 }
@@ -21,7 +21,6 @@ html.dark {
 body {
   background: var(--bg-color);
 }
-
 
 body {
   background-color: var(--bg-color);

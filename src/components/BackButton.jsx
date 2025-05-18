@@ -8,14 +8,14 @@ export default function BackButton() {
   return (
     <button
       onClick={() => router.back()}
-      className="fixed top-4 left-4 z-50 p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+      className="fixed top-4 left-4 z-50 p-2 rounded-full border-2  "
       aria-label="Go Back"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6 text-gray-700 dark:text-white"
+        className="h-6 w-6  "
         fill="none"
-        viewBox="0 0 24 24"
+        viewBox="0 0 24 24"  
         stroke="currentColor"
       >
         <path
