@@ -10,7 +10,7 @@ const FoodCard = ({ food }) => {
           <img
             src={food.image}
             alt={food.name}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover rounded-lg"   
           />
         ) : (
           <span className="text-gray-400 dark:text-gray-500">No Image</span>
@@ -34,7 +34,7 @@ const FoodCard = ({ food }) => {
         </div>
       )}
 
-      {/* View Food Button with Link to /view */}
+      {/* View Food Button with Link to /view */}  
       <Link href={`/foodOverview?foodId=${food.id}`}>
         <button className="w-full py-2 rounded-4xl border-2 transition-colors duration-200 mt-auto flex-shrink-0">
           View Food
