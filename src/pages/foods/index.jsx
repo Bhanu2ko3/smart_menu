@@ -209,6 +209,8 @@ const CategoryFoodsPage = () => {
           <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
         </header>
 
+        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {foods.map((food) => (
             <FoodCard key={food.id} food={food} />
