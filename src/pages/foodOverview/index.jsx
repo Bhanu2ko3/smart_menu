@@ -34,14 +34,6 @@ export default function FoodOverview({ item }) {
     );
   }
 
-  const handleAR = () => {
-    if (modelViewerRef.current?.activateAR) {
-      modelViewerRef.current.activateAR();
-    } else {
-      alert("AR not supported or model not ready.");
-    }
-  };
-
   const food = allFoods.find((item) => item.id.toString() === foodId);
 
   if (!food) {
@@ -73,7 +65,7 @@ export default function FoodOverview({ item }) {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Food Image */}
         <div className="w-full md:w-1/2 flex justify-center">
-          <div className="relative w-full h-96 rounded-2xl overflow-hidden shadow-lg">
+          <div className="relative w-full h-96 rounded-2xl overflow-hidden ">
             <ModelViewer src={activeModel} />
           </div>
         </div>
@@ -125,27 +117,8 @@ export default function FoodOverview({ item }) {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <button
-              onClick={handleAR}
-              className="flex-1 bg-white text-primary border border-primary py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              View in AR
-            </button>
-
-            <button
               onClick={AddToCart}
-              className="flex-1 bg-primary text-white py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors duration-300 shadow-md"
+              className="flex-1 bg-primary py-3 px-6 rounded-lg flex items-center border justify-center gap-2 shadow-md"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
