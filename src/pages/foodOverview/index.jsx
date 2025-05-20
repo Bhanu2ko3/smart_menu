@@ -1,16 +1,30 @@
 "use client";
-
-import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { allFoods } from "../../data/foodData";
-import Image from "next/image";
 import { useCart } from "../../contexts/CartContext";
-import "@google/model-viewer";
 import Link from "next/link";
+import ModelViewer from "@/components/ModelViewer";
 
 export default function FoodOverview({ item }) {
-  const searchParams = useSearchParams();
-  const foodId = searchParams.get("foodId");
+  const router = useRouter();
+  const { foodId } = router.query;
   const { addToCart } = useCart();
+  const [activeModel, setActiveModel] = useState(null);
+  const [foods, setFood] = useState(null);
+  const modelViewerRef = useRef();
+
+  useEffect(() => {
+    if (foodId) {
+      const parsedId = parseInt(foodId);
+      const matchedFood = allFoods.find((food) => food.id === parsedId);
+      if (matchedFood) {
+        setFood(matchedFood);
+        setActiveModel(matchedFood.model);
+      }
+    }
+  }, [foodId]);
 
   if (!foodId) {
     return (
@@ -51,14 +65,8 @@ export default function FoodOverview({ item }) {
       <div className="flex flex-col md:flex-row gap-8">
         {/* Food Image */}
         <div className="w-full md:w-1/2 flex justify-center">
-          <div className="relative w-full h-96 rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src={food.image || ""}
-              alt={food.name}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-500 hover:scale-105"
-            />
+          <div className="relative w-full h-96 rounded-2xl overflow-hidden ">
+            <ModelViewer src={activeModel} />
           </div>
         </div>
 
@@ -108,27 +116,9 @@ export default function FoodOverview({ item }) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <Link href={`/arFoodPreview?foodId=${food.id}`}>
-              <button className="flex-1 bg-white text-primary border border-primary py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                View in AR
-              </button>
-            </Link>
-
             <button
               onClick={AddToCart}
-              className="flex-1 bg-primary text-white py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors duration-300 shadow-md"
+              className="flex-1 bg-primary py-3 px-6 rounded-lg flex items-center border justify-center gap-2 shadow-md"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

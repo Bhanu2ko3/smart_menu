@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/model-viewer": "^4.1.0",
+    "@react-pdf/renderer": "^4.3.0",
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
     "framer-motion": "^12.10.5",
