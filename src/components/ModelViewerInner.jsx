@@ -1,8 +1,10 @@
 import "@google/model-viewer";
+import { forwardRef } from "react";
 
-export default function ModelViewerInner({ src }) {
+const ModelViewerInner = forwardRef(({ src }, ref) => {
   return (
     <model-viewer
+      ref={ref}
       src={src}
       ar
       ar-modes="scene-viewer webxr"
@@ -12,4 +14,6 @@ export default function ModelViewerInner({ src }) {
       className="w-full max-w-md h-[400px] bg-white rounded-lg shadow-md"
     />
   );
-}
+});
+
+export default ModelViewerInner;
