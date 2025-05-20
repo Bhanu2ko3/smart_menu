@@ -8,8 +8,6 @@ export const foodCategories = [
   { id: 7, name: "Drinks", image: "", items: 15 },
 ];
 
-
-
 export const allFoods = [
   // Appetizers - categoryId: 1 
   
