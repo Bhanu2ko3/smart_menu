@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { allFoods } from "../../data/foodData";
 import Image from "next/image";
 import { useCart } from "../../contexts/CartContext";
-import "@google/model-viewer";
 import Link from "next/link";
 
 export default function FoodOverview({ item }) {
@@ -108,22 +107,23 @@ export default function FoodOverview({ item }) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <Link href={`/arFoodPreview?foodId=${food.id}`}>
-              <button className="flex-1 bg-white text-primary border border-primary py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                View in AR
-              </button>
+            <Link
+              href={`/arFoodPreview?foodId=${food.id}`}
+              className="flex-1 bg-white text-primary border border-primary py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              View in AR
             </Link>
 
             <button
