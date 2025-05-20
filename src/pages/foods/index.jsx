@@ -8,23 +8,26 @@ import FoodCard from "@/components/FoodCard";
 const CategoryFoodsPage = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId");
+
   const [foods, setFoods] = useState([]);
+  const [displayedFoods, setDisplayedFoods] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const [filters, setFilters] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!categoryId) return;
 
-    // Find current category
     const category = foodCategories.find((c) => c.id.toString() === categoryId);
     if (!category) {
       setCurrentCategory(null);
       setFoods([]);
+      setDisplayedFoods([]);
       return;
     }
+
     setCurrentCategory(category);
 
-    // Filter foods by category / applied filters
     let filteredFoods = allFoods.filter((food) => food.categoryId == categoryId);
 
     if (filters) {
@@ -173,10 +176,41 @@ const CategoryFoodsPage = () => {
     }
 
     setFoods(filteredFoods);
+    setDisplayedFoods(filteredFoods);
   }, [categoryId, filters]);
+
+  // Live Search using Bubble Sort
+  useEffect(() => {
+    if (!searchQuery) {
+      setDisplayedFoods(foods);
+      return;
+    }
+
+    const lowerQuery = searchQuery.toLowerCase();
+    let matchingFoods = foods.filter((food) =>
+      food.name.toLowerCase().includes(lowerQuery)
+    );
+
+    // Bubble sort the matching foods alphabetically
+    for (let i = 0; i < matchingFoods.length; i++) {
+      for (let j = 0; j < matchingFoods.length - i - 1; j++) {
+        if (matchingFoods[j].name.toLowerCase() > matchingFoods[j + 1].name.toLowerCase()) {
+          const temp = matchingFoods[j];
+          matchingFoods[j] = matchingFoods[j + 1];
+          matchingFoods[j + 1] = temp;
+        }
+      }
+    }
+
+    setDisplayedFoods(matchingFoods);
+  }, [searchQuery, foods]);
 
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   if (!categoryId) {
@@ -204,24 +238,31 @@ const CategoryFoodsPage = () => {
         onFiltersChange={handleFiltersChange}
       />
 
-      <div className="flex-1 p-4 md:p-8 ml-20 ">
-        <header className="flex justify-center mr-12 items-center mb-8">
-          <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
+      <div className="flex-1 p-4 md:p-8 ml-20">
+        <header className="flex flex-col items-center mb-8">
+          <h1 className="text-3xl font-bold mb-4">{currentCategory.name}</h1>
+            <input
+            type="text"
+            placeholder="Search food by name..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full max-w-3xl px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          />
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {foods.map((food) => (
+          {displayedFoods.map((food) => (
             <FoodCard key={food.id} food={food} />
           ))}
         </div>
 
-        {foods.length === 0 && (
+        {displayedFoods.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">
-              No foods found for this category.
+              No foods found matching your search.
             </p>
             <p className="text-gray-400 dark:text-gray-500">
-              Try adjusting your filters or selecting a different category. 
+              Try a different keyword or clear the search.
             </p>
           </div>
         )}
