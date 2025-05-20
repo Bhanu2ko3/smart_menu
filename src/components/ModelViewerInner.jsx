@@ -1,19 +1,23 @@
 import "@google/model-viewer";
-import { forwardRef } from "react";
+import { useRef } from "react";
 
-const ModelViewerInner = forwardRef(({ src }, ref) => {
+export default function ModelViewerInner({ src }) {
+  const modelRef = useRef();
+
   return (
-    <model-viewer
-      ref={ref}
-      src={src}
-      ar
-      ar-modes="scene-viewer webxr"
-      environment-image="neutral"
-      auto-rotate
-      camera-controls
-      className="w-full max-w-md h-[400px] bg-white rounded-lg shadow-md"
-    />
-  );
-});
+    <div className="flex flex-col items-center">
+      <model-viewer
+        ref={modelRef}
+        src={src}
+        ar
+        ar-modes="scene-viewer webxr"
+        environment-image="neutral"
+        auto-rotate
+        camera-controls
+        className="w-full max-w-lg h-[390px] rounded-lg"
+      />
 
-export default ModelViewerInner;
+
+    </div>
+  );
+}
