@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { allFoods } from "../../data/foodData";
 import Image from "next/image";
 import { useCart } from "../../contexts/CartContext";
-import "@google/model-viewer";
 import Link from "next/link";
 
 export default function FoodOverview({ item }) {
