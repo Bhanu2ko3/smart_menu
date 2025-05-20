@@ -1,16 +1,30 @@
 "use client";
-
-import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { allFoods } from "../../data/foodData";
-import Image from "next/image";
 import { useCart } from "../../contexts/CartContext";
 import Link from "next/link";
-
+import ModelViewer from "@/components/ModelViewer";
 
 export default function FoodOverview({ item }) {
-  const searchParams = useSearchParams();
-  const foodId = searchParams.get("foodId");
+  const router = useRouter();
+  const { foodId } = router.query;
   const { addToCart } = useCart();
+  const [activeModel, setActiveModel] = useState(null);
+  const [foods, setFood] = useState(null);
+  const modelViewerRef = useRef();
+
+  useEffect(() => {
+    if (foodId) {
+      const parsedId = parseInt(foodId);
+      const matchedFood = allFoods.find((food) => food.id === parsedId);
+      if (matchedFood) {
+        setFood(matchedFood);
+        setActiveModel(matchedFood.model);
+      }
+    }
+  }, [foodId]);
 
   if (!foodId) {
     return (
@@ -19,6 +33,14 @@ export default function FoodOverview({ item }) {
       </div>
     );
   }
+
+  const handleAR = () => {
+    if (modelViewerRef.current?.activateAR) {
+      modelViewerRef.current.activateAR();
+    } else {
+      alert("AR not supported or model not ready.");
+    }
+  };
 
   const food = allFoods.find((item) => item.id.toString() === foodId);
 
@@ -52,13 +74,7 @@ export default function FoodOverview({ item }) {
         {/* Food Image */}
         <div className="w-full md:w-1/2 flex justify-center">
           <div className="relative w-full h-96 rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src={food.image || ""}
-              alt={food.name}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-500 hover:scale-105"
-            />
+            <ModelViewer src={activeModel} />
           </div>
         </div>
 
@@ -108,8 +124,8 @@ export default function FoodOverview({ item }) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <Link
-              href={`/arFoodPreview?foodId=${food.id}`}
+            <button
+              onClick={handleAR}
               className="flex-1 bg-white text-primary border border-primary py-3 px-6 rounded-lg flex items-center justify-center gap-2 hover:bg-primary hover:text-white transition-colors duration-300"
             >
               <svg
@@ -125,7 +141,7 @@ export default function FoodOverview({ item }) {
                 />
               </svg>
               View in AR
-            </Link>
+            </button>
 
             <button
               onClick={AddToCart}

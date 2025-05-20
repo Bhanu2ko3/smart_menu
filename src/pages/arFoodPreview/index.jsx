@@ -1,34 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ModelViewer from "@/components/ModelViewer";
-
-const models = [
-  {
-    id: "2",
-    name: "Burger",
-    url: "https://raw.githubusercontent.com/Akila-Wasalathilaka/openAR/main/burger.glb",
-  },
-  {
-    id: "3",
-    name: "Pizza",
-    url: "https://raw.githubusercontent.com/Akila-Wasalathilaka/openAR/main/pizza.glb",
-  },
-  {
-    id: "4",
-    name: "Sushi",
-    url: "https://raw.githubusercontent.com/Akila-Wasalathilaka/openAR/main/sushi.glb",
-  },
-  {
-    id: "5",
-    name: "Taco",
-    url: "https://raw.githubusercontent.com/Akila-Wasalathilaka/openAR/main/taco.glb",
-  },
-  {
-    id: "1",
-    name: "Cake",
-    url: "https://raw.githubusercontent.com/Akila-Wasalathilaka/openAR/main/cake.glb",
-  },
-];
+import { allFoods } from "../../data/foodData";
 
 const ARFoodPreview = () => {
   const router = useRouter();
@@ -37,11 +10,10 @@ const ARFoodPreview = () => {
 
   useEffect(() => {
     if (foodId) {
-      const matchedModel = models.find(
-        (model) => model.id === foodId.toLowerCase()
-      );
-      if (matchedModel) {
-        setActiveModel(matchedModel.url);
+      const parsedId = parseInt(foodId);
+      const matchedFood = allFoods.find((food) => food.id === parsedId);
+      if (matchedFood) {
+        setActiveModel(matchedFood.model);
       }
     }
   }, [foodId]);
