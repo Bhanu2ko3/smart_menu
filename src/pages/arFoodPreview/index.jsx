@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import "@google/model-viewer";
 
 // Food models data
 const models = [
