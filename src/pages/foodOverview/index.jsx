@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useCart } from "../../contexts/CartContext";
 import Link from "next/link";
 
+
 export default function FoodOverview({ item }) {
   const searchParams = useSearchParams();
   const foodId = searchParams.get("foodId");
