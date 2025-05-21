@@ -113,23 +113,9 @@ const CategoriesPanel = ({
   categories = [],
   onFiltersChange = () => {},
 }) => {
-  const [searchType, setSearchType] = useState("simple");
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Simple filters
-  const [nameFilter, setNameFilter] = useState("");
-  const [descriptionFilter, setDescriptionFilter] = useState("");
-
-  // Medium filters
-  const [categoryNameFilter, setCategoryNameFilter] = useState("");
-  const [priceMin, setPriceMin] = useState("");
-  const [priceMax, setPriceMax] = useState("");
-  const [minRating, setMinRating] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [prepTime, setPrepTime] = useState("");
-  const [availability, setAvailability] = useState("");
-
-  // Healthy filters
+  // Healthy filters only
   const [dietaryPreferences, setDietaryPreferences] = useState({
     Vegan: false,
     Vegetarian: false,
@@ -162,15 +148,6 @@ const CategoriesPanel = ({
   };
 
   const resetFilters = () => {
-    setNameFilter("");
-    setDescriptionFilter("");
-    setCategoryNameFilter("");
-    setPriceMin("");
-    setPriceMax("");
-    setMinRating("");
-    setOrigin("");
-    setPrepTime("");
-    setAvailability("");
     setDietaryPreferences({
       Vegan: false,
       Vegetarian: false,
@@ -196,19 +173,6 @@ const CategoriesPanel = ({
 
   const applyFilters = () => {
     const filters = {
-      searchType,
-      simple: {
-        name: nameFilter,
-        description: descriptionFilter,
-      },
-      medium: {
-        categoryName: categoryNameFilter,
-        price: { min: priceMin, max: priceMax },
-        minRating,
-        origin,
-        prepTime,
-        availability,
-      },
       healthy: {
         dietaryPreferences: Object.entries(dietaryPreferences)
           .filter(([_, value]) => value)
@@ -230,186 +194,99 @@ const CategoriesPanel = ({
   };
 
   const renderSearchFields = useMemo(() => {
-    switch (searchType) {
-      case "simple":
-        return (
-          <div className="space-y-3 mt-4">
-            <InputField
-              label="Name"
-              placeholder="Search by name"
-              value={nameFilter}
-              onChange={(e) => setNameFilter(e.target.value)}
-              id="name-filter"
-            />
-            <InputField
-              label="Description"
-              placeholder="Search in description"
-              value={descriptionFilter}
-              onChange={(e) => setDescriptionFilter(e.target.value)}
-              id="description-filter"
-            />
-          </div>
-        );
-      case "medium":
-        return (
-          <div className="space-y-3 mt-4">
-            <InputField
-              label="Category"
-              placeholder="Category name"
-              value={categoryNameFilter}
-              onChange={(e) => setCategoryNameFilter(e.target.value)}
-              id="category-name-filter"
-            />
-            <RangeField
-              label="Price Range"
-              minValue={priceMin}
-              maxValue={priceMax}
-              onMinChange={(e) => setPriceMin(e.target.value)}
-              onMaxChange={(e) => setPriceMax(e.target.value)}
-              idPrefix="price"
-            />
-            <SelectField
-              label="Minimum Rating"
-              options={["Any", "5", "4", "3", "2"]}
-              value={minRating}
-              onChange={(e) => setMinRating(e.target.value)}
-              id="min-rating"
-            />
-            <InputField
-              label="Origin"
-              placeholder="Country or region"
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              id="origin"
-            />
-            <SelectField
-              label="Preparation Time"
-              options={[
-                "Any Time",
-                "Quick (under 15 min)",
-                "Medium (15–30 min)",
-                "Long (30+ min)",
-              ]}
-              value={prepTime}
-              onChange={(e) => setPrepTime(e.target.value)}
-              id="prep-time"
-            />
-            <SelectField
-              label="Availability"
-              options={["Any", "In Stock", "Seasonal", "Pre-order"]}
-              value={availability}
-              onChange={(e) => setAvailability(e.target.value)}
-              id="availability"
-            />
-          </div>
-        );
-      case "healthy":
-        return (
-          <div className="space-y-3 mt-4">
-            <CheckboxGroup
-              label="Dietary Preferences"
-              options={[
-                "Vegan",
-                "Vegetarian",
-                "Gluten-Free",
-                "Keto",
-                "Organic",
-                "Dairy-Free",
-              ]}
-              values={dietaryPreferences}
-              onChange={handleDietaryChange}
-            />
-            <RangeField
-              label="Calories"
-              minValue={caloriesMin}
-              maxValue={caloriesMax}
-              onMinChange={(e) => setCaloriesMin(e.target.value)}
-              onMaxChange={(e) => setCaloriesMax(e.target.value)}
-              idPrefix="calories"
-            />
-            <RangeField
-              label="Protein (g)"
-              minValue={proteinMin}
-              maxValue={proteinMax}
-              onMinChange={(e) => setProteinMin(e.target.value)}
-              onMaxChange={(e) => setProteinMax(e.target.value)}
-              idPrefix="protein"
-            />
-            <RangeField
-              label="Carbs (g)"
-              minValue={carbsMin}
-              maxValue={carbsMax}
-              onMinChange={(e) => setCarbsMin(e.target.value)}
-              onMaxChange={(e) => setCarbsMax(e.target.value)}
-              idPrefix="carbs"
-            />
-            <RangeField
-              label="Fats (g)"
-              minValue={fatsMin}
-              maxValue={fatsMax}
-              onMinChange={(e) => setFatsMin(e.target.value)}
-              onMaxChange={(e) => setFatsMax(e.target.value)}
-              idPrefix="fats"
-            />
-            <SelectField
-              label="Flavor Profile"
-              options={[
-                "Any",
-                "Sweet",
-                "Savory",
-                "Spicy",
-                "Sour",
-                "Bitter",
-                "Umami",
-              ]}
-              value={flavorProfile}
-              onChange={(e) => setFlavorProfile(e.target.value)}
-              id="flavor-profile"
-            />
-            <SelectField
-              label="Spice Level"
-              options={["Any", "Mild", "Medium", "Hot", "Extreme"]}
-              value={spiceLevel}
-              onChange={(e) => setSpiceLevel(e.target.value)}
-              id="spice-level"
-            />
-            <InputField
-              label="Ingredients"
-              placeholder="Enter ingredients"
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-              id="ingredients"
-            />
-            <InputField
-              label="Serving Size"
-              placeholder="e.g., 2 persons"
-              value={servingSize}
-              onChange={(e) => setServingSize(e.target.value)}
-              id="serving-size"
-            />
-            <InputField
-              label="Tags"
-              placeholder="Comma-separated tags"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              id="tags"
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
+    return (
+      <div className="space-y-3 mt-4">
+        <CheckboxGroup
+          label="Dietary Preferences"
+          options={[
+            "Vegan",
+            "Vegetarian",
+            "Gluten-Free",
+            "Keto",
+            "Organic",
+            "Dairy-Free",
+          ]}
+          values={dietaryPreferences}
+          onChange={handleDietaryChange}
+        />
+        <RangeField
+          label="Calories"
+          minValue={caloriesMin}
+          maxValue={caloriesMax}
+          onMinChange={(e) => setCaloriesMin(e.target.value)}
+          onMaxChange={(e) => setCaloriesMax(e.target.value)}
+          idPrefix="calories"
+        />
+        <RangeField
+          label="Protein (g)"
+          minValue={proteinMin}
+          maxValue={proteinMax}
+          onMinChange={(e) => setProteinMin(e.target.value)}
+          onMaxChange={(e) => setProteinMax(e.target.value)}
+          idPrefix="protein"
+        />
+        <RangeField
+          label="Carbs (g)"
+          minValue={carbsMin}
+          maxValue={carbsMax}
+          onMinChange={(e) => setCarbsMin(e.target.value)}
+          onMaxChange={(e) => setCarbsMax(e.target.value)}
+          idPrefix="carbs"
+        />
+        <RangeField
+          label="Fats (g)"
+          minValue={fatsMin}
+          maxValue={fatsMax}
+          onMinChange={(e) => setFatsMin(e.target.value)}
+          onMaxChange={(e) => setFatsMax(e.target.value)}
+          idPrefix="fats"
+        />
+        <SelectField
+          label="Flavor Profile"
+          options={[
+            "Any",
+            "Sweet",
+            "Savory",
+            "Spicy",
+            "Sour",
+            "Bitter",
+            "Umami",
+          ]}
+          value={flavorProfile}
+          onChange={(e) => setFlavorProfile(e.target.value)}
+          id="flavor-profile"
+        />
+        <SelectField
+          label="Spice Level"
+          options={["Any", "Mild", "Medium", "Hot", "Extreme"]}
+          value={spiceLevel}
+          onChange={(e) => setSpiceLevel(e.target.value)}
+          id="spice-level"
+        />
+        <InputField
+          label="Ingredients"
+          placeholder="Enter ingredients"
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
+          id="ingredients"
+        />
+        <InputField
+          label="Serving Size"
+          placeholder="e.g., 2 persons"
+          value={servingSize}
+          onChange={(e) => setServingSize(e.target.value)}
+          id="serving-size"
+        />
+        <InputField
+          label="Tags"
+          placeholder="Comma-separated tags"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          id="tags"
+        />
+      </div>
+    );
   }, [
-    searchType,
-    nameFilter,
-    descriptionFilter,
-    categoryNameFilter,
-    priceMin,
-    priceMax,
-    minRating,
-    origin,
-    prepTime,
-    availability,
     dietaryPreferences,
     caloriesMin,
     caloriesMax,
@@ -426,12 +303,8 @@ const CategoriesPanel = ({
     tags,
   ]);
 
-  return (
-    <div
-      className={`transition-all duration-300 ${
-        isExpanded ? "w" : "w"
-      } relative`}
-    >
+ return (
+    <div className={`transition-all duration-300 relative`}>
       <div className="fixed top-20 left-3 sm:left-3 mr-3 h-[calc(100vh-6rem)]">
         <div className="bg-white dark:bg-gray-800 h-full rounded-4xl border-2 shadow-xl flex flex-col p-4 sm:p-5 overflow-hidden">
           {/* Toggle Button */}
@@ -457,29 +330,14 @@ const CategoriesPanel = ({
             </button>
           </div>
 
-          {/* Scrollable Content */}
+          {/* Title and Scrollable Content */}
           {isExpanded && (
-            <div className="flex-1 overflow-y-auto pr-1 sm:pr-2">
-              <div className="mb-4 flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl">
-                {["simple", "medium", "healthy"].map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => setSearchType(type)}
-                    className={`flex-1 mx-0.5 py-2 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
-                      searchType === type
-                        ? "bg-white dark:bg-gray-600 shadow-sm"
-                        : ""
-                    }`}
-                    aria-pressed={searchType === type}
-                  >
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </button>
-                ))}
+            <>
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Healthy Search</h2>
+              <div className="flex-1 overflow-y-auto pr-1 sm:pr-2">
+                {renderSearchFields}
               </div>
-
-              {/* Dynamic search fields */}
-              {renderSearchFields}
-            </div>
+            </>
           )}
 
           {/* Bottom Buttons */}
@@ -514,10 +372,6 @@ CategoriesPanel.propTypes = {
     })
   ),
   onFiltersChange: PropTypes.func,
-};
-
-CategoriesPanel.defaultProps = {
-  onFiltersChange: () => {},
 };
 
 export default CategoriesPanel;

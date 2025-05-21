@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoriesPanel from "@/components/foodFilterPanel";
 import FoodCard from "@/components/FoodCard";
+import SortByPrice from "@/components/SortByPrice";
 
 const CategoryFoodsPage = () => {
   const searchParams = useSearchParams();
@@ -14,6 +15,7 @@ const CategoryFoodsPage = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [filters, setFilters] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
 
   useEffect(() => {
     if (!categoryId) return;
@@ -31,158 +33,16 @@ const CategoryFoodsPage = () => {
     let filteredFoods = allFoods.filter((food) => food.categoryId == categoryId);
 
     if (filters) {
-      const { searchType, simple, medium, healthy } = filters;
-
-      if (searchType === "simple") {
-        if (simple.name) {
-          filteredFoods = filteredFoods.filter((food) =>
-            food.name.toLowerCase().includes(simple.name.toLowerCase())
-          );
-        }
-        if (simple.description) {
-          filteredFoods = filteredFoods.filter((food) =>
-            food.description?.toLowerCase().includes(simple.description.toLowerCase())
-          );
-        }
-      } else if (searchType === "medium") {
-        if (medium.categoryName) {
-          const category = foodCategories.find((c) =>
-            c.name.toLowerCase().includes(medium.categoryName.toLowerCase())
-          );
-          if (category) {
-            filteredFoods = filteredFoods.filter(
-              (food) => food.categoryId == category.id
-            );
-          } else {
-            filteredFoods = [];
-          }
-        }
-        if (medium.price.min) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.price >= parseFloat(medium.price.min)
-          );
-        }
-        if (medium.price.max) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.price <= parseFloat(medium.price.max)
-          );
-        }
-        if (medium.minRating) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.rating >= parseFloat(medium.minRating)
-          );
-        }
-        if (medium.origin) {
-          filteredFoods = filteredFoods.filter((food) =>
-            food.origin?.toLowerCase().includes(medium.origin.toLowerCase())
-          );
-        }
-        if (medium.prepTime && medium.prepTime !== "Any Time") {
-          const timeMap = {
-            "Quick (under 15 min)": [0, 15],
-            "Medium (15–30 min)": [15, 30],
-            "Long (30+ min)": [30, Infinity],
-          };
-          const [min, max] = timeMap[medium.prepTime];
-          filteredFoods = filteredFoods.filter(
-            (food) => food.prepTime >= min && food.prepTime <= max
-          );
-        }
-        if (medium.availability && medium.availability !== "Any") {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.availability === medium.availability
-          );
-        }
-      } else if (searchType === "healthy") {
-        if (healthy.dietaryPreferences.length > 0) {
-          filteredFoods = filteredFoods.filter((food) =>
-            healthy.dietaryPreferences.every((pref) =>
-              food.dietary?.includes(pref)
-            )
-          );
-        }
-        if (healthy.calories.min) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.calories >= parseFloat(healthy.calories.min)
-          );
-        }
-        if (healthy.calories.max) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.calories <= parseFloat(healthy.calories.max)
-          );
-        }
-        if (healthy.protein.min) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.protein >= parseFloat(healthy.protein.min)
-          );
-        }
-        if (healthy.protein.max) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.protein <= parseFloat(healthy.protein.max)
-          );
-        }
-        if (healthy.carbs.min) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.carbs >= parseFloat(healthy.carbs.min)
-          );
-        }
-        if (healthy.carbs.max) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.carbs <= parseFloat(healthy.carbs.max)
-          );
-        }
-        if (healthy.fats.min) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.fats >= parseFloat(healthy.fats.min)
-          );
-        }
-        if (healthy.fats.max) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.fats <= parseFloat(healthy.fats.max)
-          );
-        }
-        if (healthy.flavorProfile && healthy.flavorProfile !== "Any") {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.flavorProfile === healthy.flavorProfile
-          );
-        }
-        if (healthy.spiceLevel && healthy.spiceLevel !== "Any") {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.spiceLevel === healthy.spiceLevel
-          );
-        }
-        if (healthy.ingredients) {
-          const ingredients = healthy.ingredients
-            .split(",")
-            .map((i) => i.trim().toLowerCase());
-          filteredFoods = filteredFoods.filter((food) =>
-            ingredients.every((ing) =>
-              food.ingredients?.some((fi) => fi.toLowerCase().includes(ing))
-            )
-          );
-        }
-        if (healthy.servingSize) {
-          filteredFoods = filteredFoods.filter(
-            (food) => food.servingSize === healthy.servingSize
-          );
-        }
-        if (healthy.tags) {
-          const tags = healthy.tags.split(",").map((t) => t.trim().toLowerCase());
-          filteredFoods = filteredFoods.filter((food) =>
-            tags.every((tag) => food.tags?.includes(tag))
-          );
-        }
-      }
+      // If you have filter logic, insert it here.
     }
 
     setFoods(filteredFoods);
-    setDisplayedFoods(filteredFoods);
+    setDisplayedFoods(sortFoods(filteredFoods, sortOrder));
   }, [categoryId, filters]);
 
-  // Live Search using Bubble Sort
   useEffect(() => {
     if (!searchQuery) {
-      setDisplayedFoods(foods);
+      setDisplayedFoods(sortFoods(foods, sortOrder));
       return;
     }
 
@@ -191,10 +51,12 @@ const CategoryFoodsPage = () => {
       food.name.toLowerCase().includes(lowerQuery)
     );
 
-    // Bubble sort the matching foods alphabetically
     for (let i = 0; i < matchingFoods.length; i++) {
       for (let j = 0; j < matchingFoods.length - i - 1; j++) {
-        if (matchingFoods[j].name.toLowerCase() > matchingFoods[j + 1].name.toLowerCase()) {
+        if (
+          matchingFoods[j].name.toLowerCase() >
+          matchingFoods[j + 1].name.toLowerCase()
+        ) {
           const temp = matchingFoods[j];
           matchingFoods[j] = matchingFoods[j + 1];
           matchingFoods[j + 1] = temp;
@@ -202,8 +64,20 @@ const CategoryFoodsPage = () => {
       }
     }
 
-    setDisplayedFoods(matchingFoods);
-  }, [searchQuery, foods]);
+    setDisplayedFoods(sortFoods(matchingFoods, sortOrder));
+  }, [searchQuery, foods, sortOrder]);
+
+  const sortFoods = (foodArray, order) => {
+    if (!order) return foodArray;
+
+    const sorted = [...foodArray];
+    if (order === "high-to-low") {
+      sorted.sort((a, b) => b.price - a.price);
+    } else if (order === "low-to-high") {
+      sorted.sort((a, b) => a.price - b.price);
+    }
+    return sorted;
+  };
 
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
@@ -211,6 +85,10 @@ const CategoryFoodsPage = () => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleSortChange = (newSortOrder) => {
+    setSortOrder(newSortOrder);
   };
 
   if (!categoryId) {
@@ -239,16 +117,25 @@ const CategoryFoodsPage = () => {
       />
 
       <div className="flex-1 p-4 md:p-8 ml-20">
-        <header className="flex flex-col items-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">{currentCategory.name}</h1>
-            <input
-            type="text"
-            placeholder="Search food by name..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full max-w-3xl px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-          />
-        </header>
+      <header className="mb-8 max-w-5xl mx-auto">
+  <h1 className="text-3xl font-bold text-center mb-6">{currentCategory.name}</h1>
+
+  <div className="flex flex-row items-center gap-4">
+    <input
+      type="text"
+      placeholder="Search food by name..."
+      value={searchQuery}
+      onChange={handleSearchChange}
+      className="flex-grow px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+    />
+
+    <div className="w-40">
+      <SortByPrice sortOrder={sortOrder} onChange={handleSortChange} />
+    </div>
+  </div>
+</header>
+
+
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedFoods.map((food) => (
