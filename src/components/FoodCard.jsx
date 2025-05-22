@@ -10,7 +10,7 @@ const FoodCard = ({ food }) => {
           <img
             src={food.image}
             alt={food.name}
-            className="w-full h-full object-cover rounded-lg"
+            className="w-full h-full object-cover rounded-lg"   
           />
         ) : (
           <span className="text-gray-400 dark:text-gray-500">No Image</span>
@@ -21,24 +21,25 @@ const FoodCard = ({ food }) => {
 
       {food.price && (
         <div className="flex items-center dark:text-blue-400 font-medium mb-4 flex-shrink-0">
+          
           ${food.price.toFixed(2)}
           {/* Rating Stars */}
-          <div className="flex text-yellow-400 ml-6">
+          <div className="flex text-yellow-400 ml-25">
             {Array.from({ length: 5 }, (_, index) => (
               <span key={index}>
-                {index < Math.round(food.rating || 0) ? "⭐" : "☆"}
+                {index < Math.round(food.rating) ? "⭐" : "☆"}
               </span>
             ))}
           </div>
         </div>
       )}
 
-      {/* View Food Button with Link to /view */}
-      <Link href={`/foodOverview?foodId=${food.id || food.name}`}>
+      {/* View Food Button with Link to /view */}  
+      <Link href={`/foodOverview?foodId=${food.id}`}>
         <button className="w-full py-2 rounded-4xl border-2 transition-colors duration-200 mt-auto flex-shrink-0">
           View Food
         </button>
-      </Link>
+      </Link> 
     </div>
   );
 };
