@@ -16,9 +16,16 @@ const CategoryFoodsPage = () => {
   const [filters, setFilters] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!categoryId) return;
+    if (!categoryId) {
+      setCurrentCategory(null);
+      setFoods(allFoods);
+      setDisplayedFoods(sortFoods(allFoods, sortOrder));
+      return;
+    }
 
     const category = foodCategories.find((c) => c.id.toString() === categoryId);
     if (!category) {
@@ -29,43 +36,45 @@ const CategoryFoodsPage = () => {
     }
 
     setCurrentCategory(category);
-
-    let filteredFoods = allFoods.filter((food) => food.categoryId == categoryId);
-
-    if (filters) {
-      // If you have filter logic, insert it here.
-    }
-
-    setFoods(filteredFoods);
-    setDisplayedFoods(sortFoods(filteredFoods, sortOrder));
-  }, [categoryId, filters]);
+    setFoods(allFoods.filter((food) => food.categoryId.toString() === categoryId));
+    setDisplayedFoods(sortFoods(foods, sortOrder));
+  }, [categoryId]);
 
   useEffect(() => {
-    if (!searchQuery) {
+    if (!searchQuery && (!filters || !filters.healthy || !filters.healthy.recommendations)) {
       setDisplayedFoods(sortFoods(foods, sortOrder));
       return;
     }
 
-    const lowerQuery = searchQuery.toLowerCase();
-    let matchingFoods = foods.filter((food) =>
-      food.name.toLowerCase().includes(lowerQuery)
-    );
+    setIsLoading(true);
+    setError(null);
 
-    for (let i = 0; i < matchingFoods.length; i++) {
-      for (let j = 0; j < matchingFoods.length - i - 1; j++) {
-        if (
-          matchingFoods[j].name.toLowerCase() >
-          matchingFoods[j + 1].name.toLowerCase()
-        ) {
-          const temp = matchingFoods[j];
-          matchingFoods[j] = matchingFoods[j + 1];
-          matchingFoods[j + 1] = temp;
-        }
+    try {
+      let filteredFoods = [...foods];
+
+      if (searchQuery) {
+        const lowerQuery = searchQuery.toLowerCase();
+        filteredFoods = filteredFoods.filter((food) =>
+          food.name.toLowerCase().includes(lowerQuery)
+        );
       }
-    }
 
-    setDisplayedFoods(sortFoods(matchingFoods, sortOrder));
-  }, [searchQuery, foods, sortOrder]);
+      if (filters && filters.healthy && filters.healthy.recommendations) {
+        filteredFoods = filters.healthy.recommendations;
+      } else if (filters && filters.healthy) {
+        filteredFoods = [];
+        throw new Error("No foods match your preferences. Try adjusting your filters.");
+      }
+
+      setDisplayedFoods(sortFoods(filteredFoods, sortOrder));
+    } catch (err) {
+      console.error('Filter error:', err);
+      setError(err.message);
+      setDisplayedFoods([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [searchQuery, filters, sortOrder, foods]);
 
   const sortFoods = (foodArray, order) => {
     if (!order) return foodArray;
@@ -117,39 +126,39 @@ const CategoryFoodsPage = () => {
       />
 
       <div className="flex-1 p-4 md:p-8 ml-20">
-      <header className="mb-8 max-w-5xl mx-auto">
-  <h1 className="text-3xl font-bold text-center mb-6">{currentCategory.name}</h1>
+        <header className="mb-8 max-w-5xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-6">{currentCategory.name}</h1>
 
-  <div className="flex flex-row items-center gap-4">
-    <input
-      type="text"
-      placeholder="Search food by name..."
-      value={searchQuery}
-      onChange={handleSearchChange}
-      className="flex-grow px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-    />
+          <div className="flex flex-row items-center gap-4">
+            <input
+              type="text"
+              placeholder="Search food by name..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="flex-grow px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            />
 
-    <div className="w-40">
-      <SortByPrice sortOrder={sortOrder} onChange={handleSortChange} />
-    </div>
-  </div>
-</header>
+            <div className="w-40">
+              <SortByPrice sortOrder={sortOrder} onChange={handleSortChange} />
+            </div>
+          </div>
+        </header>
 
-
-
+        {isLoading && <p className="text-center text-gray-600 dark:text-gray-300">Loading...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedFoods.map((food) => (
             <FoodCard key={food.id} food={food} />
           ))}
         </div>
 
-        {displayedFoods.length === 0 && (
+        {displayedFoods.length === 0 && !isLoading && !error && (
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">
-              No foods found matching your search.
+              No foods found matching your search or filters.
             </p>
             <p className="text-gray-400 dark:text-gray-500">
-              Try a different keyword or clear the search.
+              Try adjusting your preferences.
             </p>
           </div>
         )}
