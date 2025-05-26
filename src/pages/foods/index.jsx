@@ -4,100 +4,179 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoriesPanel from "@/components/foodFilterPanel";
 import FoodCard from "@/components/FoodCard";
-import SortByPrice from "@/components/SortByPrice";
 
 const CategoryFoodsPage = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId");
-
   const [foods, setFoods] = useState([]);
-  const [displayedFoods, setDisplayedFoods] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const [filters, setFilters] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!categoryId) {
-      setCurrentCategory(null);
-      setFoods(allFoods);
-      setDisplayedFoods(sortFoods(allFoods, sortOrder));
-      return;
-    }
+    if (!categoryId) return;
 
+    // Find current category
     const category = foodCategories.find((c) => c.id.toString() === categoryId);
     if (!category) {
       setCurrentCategory(null);
       setFoods([]);
-      setDisplayedFoods([]);
       return;
     }
-
     setCurrentCategory(category);
-    setFoods(allFoods.filter((food) => food.categoryId.toString() === categoryId));
-    setDisplayedFoods(sortFoods(foods, sortOrder));
-  }, [categoryId]);
 
-  useEffect(() => {
-    if (!searchQuery && (!filters || !filters.healthy || !filters.healthy.recommendations)) {
-      setDisplayedFoods(sortFoods(foods, sortOrder));
-      return;
-    }
+    // Filter foods by category / applied filters
+    let filteredFoods = allFoods.filter((food) => food.categoryId == categoryId);
 
-    setIsLoading(true);
-    setError(null);
+    if (filters) {
+      const { searchType, simple, medium, healthy } = filters;
 
-    try {
-      let filteredFoods = [...foods];
-
-      if (searchQuery) {
-        const lowerQuery = searchQuery.toLowerCase();
-        filteredFoods = filteredFoods.filter((food) =>
-          food.name.toLowerCase().includes(lowerQuery)
-        );
+      if (searchType === "simple") {
+        if (simple.name) {
+          filteredFoods = filteredFoods.filter((food) =>
+            food.name.toLowerCase().includes(simple.name.toLowerCase())
+          );
+        }
+        if (simple.description) {
+          filteredFoods = filteredFoods.filter((food) =>
+            food.description?.toLowerCase().includes(simple.description.toLowerCase())
+          );
+        }
+      } else if (searchType === "medium") {
+        if (medium.categoryName) {
+          const category = foodCategories.find((c) =>
+            c.name.toLowerCase().includes(medium.categoryName.toLowerCase())
+          );
+          if (category) {
+            filteredFoods = filteredFoods.filter(
+              (food) => food.categoryId == category.id
+            );
+          } else {
+            filteredFoods = [];
+          }
+        }
+        if (medium.price.min) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.price >= parseFloat(medium.price.min)
+          );
+        }
+        if (medium.price.max) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.price <= parseFloat(medium.price.max)
+          );
+        }
+        if (medium.minRating) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.rating >= parseFloat(medium.minRating)
+          );
+        }
+        if (medium.origin) {
+          filteredFoods = filteredFoods.filter((food) =>
+            food.origin?.toLowerCase().includes(medium.origin.toLowerCase())
+          );
+        }
+        if (medium.prepTime && medium.prepTime !== "Any Time") {
+          const timeMap = {
+            "Quick (under 15 min)": [0, 15],
+            "Medium (15–30 min)": [15, 30],
+            "Long (30+ min)": [30, Infinity],
+          };
+          const [min, max] = timeMap[medium.prepTime];
+          filteredFoods = filteredFoods.filter(
+            (food) => food.prepTime >= min && food.prepTime <= max
+          );
+        }
+        if (medium.availability && medium.availability !== "Any") {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.availability === medium.availability
+          );
+        }
+      } else if (searchType === "healthy") {
+        if (healthy.dietaryPreferences.length > 0) {
+          filteredFoods = filteredFoods.filter((food) =>
+            healthy.dietaryPreferences.every((pref) =>
+              food.dietary?.includes(pref)
+            )
+          );
+        }
+        if (healthy.calories.min) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.calories >= parseFloat(healthy.calories.min)
+          );
+        }
+        if (healthy.calories.max) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.calories <= parseFloat(healthy.calories.max)
+          );
+        }
+        if (healthy.protein.min) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.protein >= parseFloat(healthy.protein.min)
+          );
+        }
+        if (healthy.protein.max) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.protein <= parseFloat(healthy.protein.max)
+          );
+        }
+        if (healthy.carbs.min) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.carbs >= parseFloat(healthy.carbs.min)
+          );
+        }
+        if (healthy.carbs.max) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.carbs <= parseFloat(healthy.carbs.max)
+          );
+        }
+        if (healthy.fats.min) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.fats >= parseFloat(healthy.fats.min)
+          );
+        }
+        if (healthy.fats.max) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.fats <= parseFloat(healthy.fats.max)
+          );
+        }
+        if (healthy.flavorProfile && healthy.flavorProfile !== "Any") {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.flavorProfile === healthy.flavorProfile
+          );
+        }
+        if (healthy.spiceLevel && healthy.spiceLevel !== "Any") {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.spiceLevel === healthy.spiceLevel
+          );
+        }
+        if (healthy.ingredients) {
+          const ingredients = healthy.ingredients
+            .split(",")
+            .map((i) => i.trim().toLowerCase());
+          filteredFoods = filteredFoods.filter((food) =>
+            ingredients.every((ing) =>
+              food.ingredients?.some((fi) => fi.toLowerCase().includes(ing))
+            )
+          );
+        }
+        if (healthy.servingSize) {
+          filteredFoods = filteredFoods.filter(
+            (food) => food.servingSize === healthy.servingSize
+          );
+        }
+        if (healthy.tags) {
+          const tags = healthy.tags.split(",").map((t) => t.trim().toLowerCase());
+          filteredFoods = filteredFoods.filter((food) =>
+            tags.every((tag) => food.tags?.includes(tag))
+          );
+        }
       }
-
-      if (filters && filters.healthy && filters.healthy.recommendations) {
-        filteredFoods = filters.healthy.recommendations;
-      } else if (filters && filters.healthy) {
-        filteredFoods = [];
-        throw new Error("No foods match your preferences. Try adjusting your filters.");
-      }
-
-      setDisplayedFoods(sortFoods(filteredFoods, sortOrder));
-    } catch (err) {
-      console.error('Filter error:', err);
-      setError(err.message);
-      setDisplayedFoods([]);
-    } finally {
-      setIsLoading(false);
     }
-  }, [searchQuery, filters, sortOrder, foods]);
 
-  const sortFoods = (foodArray, order) => {
-    if (!order) return foodArray;
-
-    const sorted = [...foodArray];
-    if (order === "high-to-low") {
-      sorted.sort((a, b) => b.price - a.price);
-    } else if (order === "low-to-high") {
-      sorted.sort((a, b) => a.price - b.price);
-    }
-    return sorted;
-  };
+    setFoods(filteredFoods);
+  }, [categoryId, filters]);
 
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleSortChange = (newSortOrder) => {
-    setSortOrder(newSortOrder);
   };
 
   if (!categoryId) {
@@ -125,40 +204,26 @@ const CategoryFoodsPage = () => {
         onFiltersChange={handleFiltersChange}
       />
 
-      <div className="flex-1 p-4 md:p-8 ml-20">
-        <header className="mb-8 max-w-5xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-6">{currentCategory.name}</h1>
-
-          <div className="flex flex-row items-center gap-4">
-            <input
-              type="text"
-              placeholder="Search food by name..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="flex-grow px-5 py-3 rounded-3xl shadow-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-            />
-
-            <div className="w-40">
-              <SortByPrice sortOrder={sortOrder} onChange={handleSortChange} />
-            </div>
-          </div>
+      <div className="flex-1 p-4 md:p-8 ml-20 ">
+        <header className="flex justify-center mr-12 items-center mb-8">
+          <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
         </header>
 
-        {isLoading && <p className="text-center text-gray-600 dark:text-gray-300">Loading...</p>}
-        {error && <p className="text-center text-red-500">{error}</p>}
+        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedFoods.map((food) => (
+          {foods.map((food) => (
             <FoodCard key={food.id} food={food} />
           ))}
         </div>
 
-        {displayedFoods.length === 0 && !isLoading && !error && (
+        {foods.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">
-              No foods found matching your search or filters.
+              No foods found for this category.
             </p>
             <p className="text-gray-400 dark:text-gray-500">
-              Try adjusting your preferences.
+              Try adjusting your filters or selecting a different category. 
             </p>
           </div>
         )}
