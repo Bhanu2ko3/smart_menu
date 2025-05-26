@@ -1,6 +1,5 @@
 "use client";
-import { useRef } from "react";
-import React, { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { allFoods } from "../../data/foodData";
 import { useCart } from "../../contexts/CartContext";
@@ -12,7 +11,8 @@ export default function FoodOverview({ item }) {
   const { foodId } = router.query;
   const { addToCart } = useCart();
   const [activeModel, setActiveModel] = useState(null);
-  const [foods, setFood] = useState(null);
+  const [food, setFood] = useState(null);
+  const [currency, setCurrency] = useState("USD");
   const modelViewerRef = useRef();
 
   useEffect(() => {
@@ -34,8 +34,6 @@ export default function FoodOverview({ item }) {
     );
   }
 
-  const food = allFoods.find((item) => item.id.toString() === foodId);
-
   if (!food) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -48,7 +46,7 @@ export default function FoodOverview({ item }) {
     addToCart({
       id: food.id,
       name: food.name,
-      price: food.price,
+      price: food.price, // Pass the entire price object
       image: food.image || "",
       description: food.description,
     });
@@ -60,12 +58,21 @@ export default function FoodOverview({ item }) {
     : food.dietary;
   const tags = Array.isArray(food.tags) ? food.tags.join(", ") : food.tags;
 
+  // Toggle currency
+  const toggleCurrency = () => {
+    setCurrency(currency === "USD" ? "LKR" : "USD");
+  };
+
+  // Get price based on selected currency
+  const displayPrice = food.price[currency].toFixed(2);
+  const currencySymbol = currency === "USD" ? "$" : "LKR ";
+
   return (
     <div className="max-w-6xl mx-auto p-6 mt-13">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Food Image */}
         <div className="w-full md:w-1/2 flex justify-center">
-          <div className="relative w-full h-96 rounded-2xl overflow-hidden ">
+          <div className="relative w-full h-96 rounded-2xl overflow-hidden">
             <ModelViewer src={activeModel} />
           </div>
         </div>
@@ -73,30 +80,30 @@ export default function FoodOverview({ item }) {
         {/* Food Details */}
         <div className="w-full md:w-1/2">
           <div className="flex justify-between items-start">
-            <h1 className="text-3xl font-bold ">{food.name}</h1>
-            <div className="flex items-center bg-primary  px-3 py-1 rounded-full">
+            <h1 className="text-3xl font-bold">{food.name}</h1>
+            <div className="flex items-center bg-primary px-3 py-1 rounded-full">
               <span className="text-sm font-medium">{food.rating}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 ml-1"
+                className="h-4 w-14 ml-1"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3 .921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784 .57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
           </div>
 
-          <p className=" mt-1">
+          <p className="mt-1">
             {food.origin} • {food.prepTime}
           </p>
 
-          <p className=" mt-4">{food.description}</p>
+          <p className="mt-4">{food.description}</p>
 
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <div className="flex justify-between items-center mb-2">
               <span className="text-2xl font-semibold text-primary">
-                ${food.price.toFixed(2)}
+                {currencySymbol}{displayPrice}
               </span>
               <span
                 className={`px-2 py-1 rounded text-xs font-medium ${
@@ -109,6 +116,12 @@ export default function FoodOverview({ item }) {
               </span>
             </div>
             <p className="text-sm text-gray-500">{food.servingSize}</p>
+            <button
+              onClick={toggleCurrency}
+              className="mt-2 bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm"
+            >
+              Switch to {currency === "USD" ? "LKR" : "USD"}
+            </button>
           </div>
 
           {/* Divider */}
