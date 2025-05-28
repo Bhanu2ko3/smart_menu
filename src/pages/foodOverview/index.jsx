@@ -7,7 +7,7 @@ import ModelViewer from "@/components/ModelViewer";
 export default function FoodOverview() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const foodId = searchParams.get("foodId");
+  const [foodId, setFoodId] = useState(null); // Initialize as null
   const { addToCart } = useCart();
   const [activeModel, setActiveModel] = useState(null);
   const [food, setFood] = useState(null);
@@ -18,6 +18,13 @@ export default function FoodOverview() {
   // Base URL for the backend
   const BASE_URL = "https://smartmenu-backend.up.railway.app";
 
+  // Extract foodId after component mounts
+  useEffect(() => {
+    const foodIdParam = searchParams.get("foodId");
+    setFoodId(foodIdParam);
+  }, [searchParams]);
+
+  // Fetch food once foodId is available
   useEffect(() => {
     const fetchFood = async () => {
       if (!foodId) {
@@ -50,7 +57,9 @@ export default function FoodOverview() {
       }
     };
 
-    fetchFood();
+    if (foodId !== null) { // Wait until foodId is set
+      fetchFood();
+    }
   }, [foodId]);
 
   if (loading) {
