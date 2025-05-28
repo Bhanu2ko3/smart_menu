@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import MealBot from "@/components/MealBot"; 
 
 const FoodsByCategory = () => {
   const router = useRouter();
@@ -256,7 +257,7 @@ const FoodsByCategory = () => {
                           />
                         </svg>
                         <span className="text-xs font-medium text-gray-200">
-                          {food.rating} тнР
+                          {food.rating} ★
                         </span>
                       </div>
                     </div>
@@ -278,6 +279,7 @@ const FoodsByCategory = () => {
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
+                    <MealBot />
                   </div>
                 </div>
               </div>
@@ -285,6 +287,8 @@ const FoodsByCategory = () => {
           </div>
         )}
       </div>
+      {/* Add MealBot at the root level */}
+      <MealBot />
     </div>
   );
 };
