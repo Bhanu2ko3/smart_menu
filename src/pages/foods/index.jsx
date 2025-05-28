@@ -90,7 +90,10 @@ const FoodsByCategory = () => {
               <div
                 key={food._id}
                 className="bg-gray-800 rounded-xl shadow-md hover:shadow-lg border border-gray-700 p-4 cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-                onClick={() => router.push(`/food?foodId=${food._id}`)}
+                onClick={() => {
+                  console.log("Navigating to foodId:", food._id); // Debug log
+                  router.push(`/foodOverview?foodId=${food._id}`);
+                }}
               >
                 <img
                   src={food.imageUrl || "/placeholder.png"}
