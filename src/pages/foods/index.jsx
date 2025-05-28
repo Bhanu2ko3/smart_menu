@@ -126,20 +126,6 @@ const FoodsByCategory = () => {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="flex min-h-screen transition-colors duration-300">
-      <div className="flex-1 p-4 md:p-8 ml-20">
-        <header className="flex justify-center mr-12 items-center mb-8">
-          <h1 className="text-3xl font-bold">{currentCategory.name}</h1>
-        </header>
-
-        
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {foods.map((food) => (
-            <FoodCard key={food.id} food={food} />
-          ))}
-=======
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -171,7 +157,6 @@ const FoodsByCategory = () => {
               className="w-full pl-12 pr-4 py-4 text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
             />
           </div>
->>>>>>> 8059556b45676d84062ed8fd97ec94d9aa354c02
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
