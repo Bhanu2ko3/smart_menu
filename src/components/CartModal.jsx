@@ -80,7 +80,6 @@ export default function CartModal({ isOpen, onClose }) {
       const result = await response.json();
       setSuccess("Order placed successfully!");
       clearCart();
-      onClose(); // Close the modal after successful checkout
     } catch (err) {
       setError(err.message);
     } finally {

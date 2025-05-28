@@ -9,6 +9,7 @@ const CartContext = createContext({
   addToCart: () => {},
   removeFromCart: () => {},
   updateQuantity: () => {},
+  clearCart: () => {}, // Ensure default includes clearCart
 });
 
 export function CartProvider({ children }) {
@@ -74,6 +75,14 @@ export function CartProvider({ children }) {
     });
   };
 
+  // Clear cart
+  const clearCart = () => {
+    setCartItems([]);
+    setCartCount(0);
+    localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartCount");
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -82,6 +91,7 @@ export function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart, // Add clearCart to context value
       }}
     >
       {children}
