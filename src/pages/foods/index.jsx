@@ -5,22 +5,31 @@ import { useRouter, useSearchParams } from "next/navigation";
 const FoodsByCategory = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const category = searchParams.get("category");
+  const [category, setCategory] = useState(null); // Initialize as null
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isMounted, setIsMounted] = useState(false); // New state to track mount
-  const [sortOrder, setSortOrder] = useState("none"); // New state for sort order
+  const [sortOption, setSortOption] = useState("price-asc"); // Default sort: price low to high
 
   // Base URL for the backend
   const BASE_URL = "https://smartmenu-backend.up.railway.app";
 
+  // Extract category after component mounts
   useEffect(() => {
-    // Set isMounted to true after initial render
-    setIsMounted(true);
+    const categoryParam = searchParams.get("category");
+    setCategory(categoryParam);
+  }, [searchParams]);
 
+  // Fetch foods once category is available
+  useEffect(() => {
     const fetchFoods = async () => {
+      if (!category) {
+        setError("No category selected");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         const response = await fetch(`${BASE_URL}/api/foods`, {
@@ -36,7 +45,7 @@ const FoodsByCategory = () => {
         console.log("Category from query:", category); // Debug log
 
         // Normalize category and food.category for case-insensitive matching
-        const decodedCategory = decodeURIComponent(category || "").toLowerCase().trim();
+        const decodedCategory = decodeURIComponent(category).toLowerCase().trim();
         const filteredFoods = foodsData.filter((food) =>
           food.category?.toLowerCase().trim() === decodedCategory
         );
@@ -50,24 +59,27 @@ const FoodsByCategory = () => {
       }
     };
 
-    // Only fetch if category exists or after mount
-    if (isMounted && category) {
+    if (category !== null) {
       fetchFoods();
-    } else if (isMounted && !category) {
-      setError("No category selected");
-      setLoading(false);
     }
-  }, [category, isMounted]);
+  }, [category]);
 
-  // Filter foods based on search query
+  // Filter and sort foods
   const filteredFoods = foods
-    .filter((food) =>
-      food.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    .filter((food) => food.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) => {
-      if (sortOrder === "asc") return a.price - b.price;
-      if (sortOrder === "desc") return b.price - a.price;
-      return 0; // No sorting when "none"
+      switch (sortOption) {
+        case "price-asc":
+          return a.price - b.price;
+        case "price-desc":
+          return b.price - a.price;
+        case "name-asc":
+          return a.name.localeCompare(b.name);
+        case "name-desc":
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
     });
 
   if (loading) {
@@ -141,24 +153,27 @@ const FoodsByCategory = () => {
               type="text"
               placeholder="Search foods..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)} // Fixed typo: e.targevalue to e.target.value
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
             />
           </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Add Sort by Price Dropdown Here */}
-        <div className="mb-6">
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="w-full max-w-xs px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white text-gray-900 dark:text-gray-100"
-          >
-            <option value="none">None</option>
-            <option value="asc">Price: Low to High</option>
-            <option value="desc">Price: High to Low</option>
-          </select>
+        {/* Sort Dropdown - Moved to Content Area */}
+        <div className="mb-6 flex justify-end">
+          <div className="w-full sm:w-48">
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className=" p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white"
+            >
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A to Z</option>
+              <option value="name-desc">Name: Z to A</option>
+            </select>
+          </div>
         </div>
         {filteredFoods.length === 0 ? (
           <div className="text-center py-16 sm:py-20">
@@ -241,7 +256,7 @@ const FoodsByCategory = () => {
                           />
                         </svg>
                         <span className="text-xs font-medium text-gray-200">
-                          {food.rating} ⭐
+                          {food.rating} тнР
                         </span>
                       </div>
                     </div>
