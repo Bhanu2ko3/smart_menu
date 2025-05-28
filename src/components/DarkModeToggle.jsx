@@ -1,21 +1,15 @@
 "use client";
-import { useEffect } from "react";
 
 const DarkModeToggle = ({ darkMode, toggleDarkMode }) => {
   return (
     <button
       onClick={toggleDarkMode}
-      className={`fixed top-4 right-4 z-50 p-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 ${
-        darkMode
-          ? "bg-slate-800/80 backdrop-blur-sm border border-slate-700 text-white focus:ring-yellow-500/30 hover:bg-slate-700/80"
-          : "bg-white/80 backdrop-blur-sm border border-slate-200 text-gray-700 focus:ring-orange-500/30 hover:bg-white"
-      }`}
-      aria-label="Toggle dark mode"
+      className="w-12 h-12 p-2 rounded-full border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-500/30 dark:focus:ring-orange-500/30 aria-label='Toggle dark mode'"
     >
       {darkMode ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
+          className="h-6 w-6 text-gray-700 dark:text-gray-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -30,7 +24,7 @@ const DarkModeToggle = ({ darkMode, toggleDarkMode }) => {
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
+          className="h-6 w-6 text-gray-700 dark:text-gray-300"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
