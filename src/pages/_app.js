@@ -4,18 +4,19 @@ import BackButton from "@/components/BackButton";
 import CartIcon from "@/components/CartIcon";
 import { CartProvider } from "@/contexts/CartContext";
 import { useState, useEffect } from "react";
+import CartModal from "@/components/CartModal";
 
 export default function App({ Component, pageProps }) {
   const [darkMode, setDarkMode] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Initialize dark mode from localStorage or system preference
   useEffect(() => {
-    const savedMode = localStorage.getItem('darkMode');
+    const savedMode = localStorage.getItem("darkMode");
     if (savedMode !== null) {
-      setDarkMode(savedMode === 'true');
+      setDarkMode(savedMode === "true");
     } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       setDarkMode(prefersDark);
     }
   }, []);
@@ -23,25 +24,44 @@ export default function App({ Component, pageProps }) {
   // Apply dark mode class to document
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove("dark");
     }
-    // Save preference to localStorage
-    localStorage.setItem('darkMode', darkMode.toString());
+    localStorage.setItem("darkMode", darkMode.toString());
   }, [darkMode]);
 
   const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
+    setDarkMode((prev) => !prev);
+  };
+
+  const openCart = () => {
+    setIsCartOpen(true);
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
   };
 
   return (
     <CartProvider>
-      <BackButton />
-      <CartIcon />
-      <DarkModeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-
-      <Component {...pageProps} />
+      <div className="min-h-screen relative">
+        {/* Floating transparent header */}
+        <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex items-center justify-between pointer-events-none">
+          <div className="pointer-events-auto">
+            <BackButton />
+          </div>
+          <div className="flex items-center space-x-4 pointer-events-auto">
+            <CartIcon onClick={openCart} />
+            <DarkModeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          </div>
+        </header>
+        
+        {/* Page content without padding/margin for header */}
+        <Component {...pageProps} />
+        
+        <CartModal isOpen={isCartOpen} onClose={closeCart} />
+      </div>
     </CartProvider>
   );
 }
