@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 const App = () => {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState({
     name: "English",
     icon: "https://cdn-icons-png.flaticon.com/128/330/330425.png",
@@ -103,18 +104,26 @@ const App = () => {
         ))}
       </div>
 
-      {/* Main Content */}
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-4 z-10">
+   {/* Main Content Container */}
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8 z-10">
         {/* Logo */}
         <div className="mb-12 text-center">
           <img
             src="https://cdn-icons-png.flaticon.com/128/3174/3174800.png"
-            className={`w-32 h-32 mx-auto mb-4 dark:invert }`}
+            className={`w-32 h-32 mx-auto mb-4 ${darkMode ? 'invert' : ''}`}
             alt="Smart Menu Logo"
           />
 
-          <h1 className="text-5xl font-bold  mb-2">Smart Menu</h1>
-          <p className="text-xl ">The future of dining experience</p>
+          <h1 className={`text-5xl font-bold mb-2 ${
+            darkMode ? 'text-white' : 'text-black'
+          }`}>
+            Smart Menu
+          </h1>
+          <p className={`text-xl ${
+            darkMode ? 'text-slate-300' : 'text-black'
+          }`}>
+            The future of dining experience
+          </p>
         </div>
 
         {/* Start Ordering Button */}
