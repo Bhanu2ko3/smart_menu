@@ -1,32 +1,53 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { allFoods } from "../../data/foodData";
 import { useCart } from "../../contexts/CartContext";
 import Link from "next/link";
 import ModelViewer from "@/components/ModelViewer";
 
-export default function FoodOverview({ item }) {
+const API_BASE_URL = 'http://localhost:5000';
+
+export default function FoodOverview() {
   const router = useRouter();
   const { foodId } = router.query;
   const { addToCart } = useCart();
   const [activeModel, setActiveModel] = useState(null);
   const [food, setFood] = useState(null);
   const [currency, setCurrency] = useState("USD");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const modelViewerRef = useRef();
 
   useEffect(() => {
-    if (foodId) {
-      const parsedId = parseInt(foodId);
-      const matchedFood = allFoods.find((food) => food.id === parsedId);
-      if (matchedFood) {
-        setFood(matchedFood);
-        setActiveModel(matchedFood.model);
-      }
+    if (!foodId) {
+      setLoading(false);
+      return;
     }
+
+    const fetchFood = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`${API_BASE_URL}/api/foods/${foodId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch food item");
+        }
+        const foodData = await response.json();
+        setFood(foodData);
+        setActiveModel(foodData.model3DUrl);
+      } catch (err) {
+        setError(err.message);
+        setFood(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFood();
   }, [foodId]);
 
-  if (!foodId) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         Loading...
@@ -34,20 +55,20 @@ export default function FoodOverview({ item }) {
     );
   }
 
-  if (!food) {
+  if (error || !food) {
     return (
       <div className="flex justify-center items-center h-screen">
-        Food not found!
+        {error || "Food not found!"}
       </div>
     );
   }
 
   const AddToCart = () => {
     addToCart({
-      id: food.id,
+      id: food._id,
       name: food.name,
       price: food.price, // Pass the entire price object
-      image: food.image || "",
+      image: food.imageUrl || "",
       description: food.description,
     });
   };
@@ -95,7 +116,7 @@ export default function FoodOverview({ item }) {
           </div>
 
           <p className="mt-1">
-            {food.origin} • {food.prepTime}
+            {food.origin} • {food.preparationTime}
           </p>
 
           <p className="mt-4">{food.description}</p>
@@ -181,7 +202,7 @@ export default function FoodOverview({ item }) {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Flavor Profile</span>
                   <span className="font-medium capitalize">
-                    {food.flavorProfile?.toLowerCase()}
+                    {food.flavor?.toLowerCase()}
                   </span>
                 </div>
                 <div className="flex justify-between">

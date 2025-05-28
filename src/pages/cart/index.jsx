@@ -4,12 +4,18 @@ import { useCart } from "../../contexts/CartContext";
 import Link from "next/link";
 import Image from "next/image";
 import { FaCcVisa, FaCcMastercard, FaPaypal, FaApplePay } from "react-icons/fa";
+import { useState } from "react";
+
+const API_BASE_URL = 'https://smartmenu-backend.up.railway.app';
 
 export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
-  // Calculate totals
+  const [checkoutStatus, setCheckoutStatus] = useState(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  // Calculate totals using price.USD
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+    (sum, item) => sum + item.price.USD * item.quantity,
     0
   );
   const tax = subtotal * 0.1; // 10% tax
@@ -27,8 +33,59 @@ export default function CartPage() {
     removeFromCart(id); // <-- USE CONTEXT FUNCTION
   };
 
+  // Handle checkout
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    setCheckoutStatus(null);
+
+    try {
+      const orderData = {
+        items: cartItems.map(item => ({
+          foodId: item.id, // Maps to _id in backend
+          name: item.name,
+          price: item.price.USD,
+          quantity: item.quantity,
+        })),
+        subtotal,
+        tax,
+        deliveryFee,
+        total,
+        status: 'Pending', // Initial order status
+        createdAt: new Date(),
+      };
+
+      const response = await fetch(`${API_BASE_URL}/api/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to place order');
+      }
+
+      const savedOrder = await response.json();
+      setCheckoutStatus({
+        type: 'success',
+        message: `Order #${savedOrder._id} placed successfully!`,
+      });
+
+      // Optionally clear cart after successful order
+      // cartItems.forEach(item => removeFromCart(item.id));
+    } catch (err) {
+      setCheckoutStatus({
+        type: 'error',
+        message: err.message || 'Failed to place order. Please try again.',
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
   return (
-    <div className="  py-8 px-4 sm:px-6 lg:px-8 mt-13">
+    <div className="py-8 px-4 sm:px-6 lg:px-8 mt-13">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Your Cart</h1>
@@ -51,6 +108,14 @@ export default function CartPage() {
             Continue Shopping
           </Link>
         </div>
+
+        {checkoutStatus && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            checkoutStatus.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          }`}>
+            {checkoutStatus.message}
+          </div>
+        )}
 
         {cartItems.length === 0 ? (
           <div className="text-center py-12">
@@ -96,7 +161,7 @@ export default function CartPage() {
                         <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-6">
                           <div className="relative h-24 w-24 rounded-md overflow-hidden">
                             <Image
-                              src={item.image}
+                              src={item.imageUrl || "/placeholder-image.jpg"}
                               alt={item.name}
                               layout="fill"
                               objectFit="cover"
@@ -122,18 +187,18 @@ export default function CartPage() {
                               )}
                             </div>
                             <p className="text-lg font-medium text-gray-900 ml-4">
-                              ${item.price.toFixed(2)}
+                              ${item.price.USD.toFixed(2)}
                             </p>
                           </div>
 
                           {/* Quantity Controls */}
-                          <div className="mt-4 flex items-center justify-between ">
+                          <div className="mt-4 flex items-center justify-between">
                             <div className="flex items-center border border-gray-300 rounded-4xl">
                               <button
                                 onClick={() =>
-                                  updateQuantity(item.id, item.quantity - 1)
+                                  handleQuantityChange(item.id, item.quantity - 1)
                                 }
-                                className="px-3 py-1 rounded-4xl bg-red-500  hover:bg-red-600 transition"
+                                className="px-3 py-1 rounded-4xl bg-red-500 hover:bg-red-600 transition"
                               >
                                 -
                               </button>
@@ -142,9 +207,9 @@ export default function CartPage() {
                               </span>
                               <button
                                 onClick={() =>
-                                  updateQuantity(item.id, item.quantity + 1)
+                                  handleQuantityChange(item.id, item.quantity + 1)
                                 }
-                                className="px-3 py-1 rounded-4xl bg-green-500  hover:bg-green-600 transition"
+                                className="px-3 py-1 rounded-4xl bg-green-500 hover:bg-green-600 transition"
                               >
                                 +
                               </button>
@@ -247,9 +312,13 @@ export default function CartPage() {
                 <div className="mt-6">
                   <button
                     type="button"
-                    className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut}
+                    className={`w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${
+                      isCheckingOut ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary hover:bg-primary-dark'
+                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary`}
                   >
-                    Proceed to Checkout
+                    {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
                   </button>
                 </div>
 
