@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }) {
           </div>
           <div className="flex items-center space-x-4 pointer-events-auto">
             <CartIcon onClick={openCart} />
-            <DarkModeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            
           </div>
         </header>
         
