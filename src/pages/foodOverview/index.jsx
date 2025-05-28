@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { allFoods } from "../../data/foodData";
 import { useCart } from "../../contexts/CartContext";
-import Link from "next/link";
 import ModelViewer from "@/components/ModelViewer";
 
 export default function FoodOverview({ item }) {

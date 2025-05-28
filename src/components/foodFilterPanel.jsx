@@ -428,9 +428,7 @@ const CategoriesPanel = ({
 
   return (
     <div
-      className={`transition-all duration-300 ${
-        isExpanded ? "w" : "w"
-      } relative`}
+      className={`transition-all duration-300 `}
     >
       <div className="fixed top-20 left-3 sm:left-3 mr-3 h-[calc(100vh-6rem)]">
         <div className="bg-white dark:bg-gray-800 h-full rounded-4xl border-2 shadow-xl flex flex-col p-4 sm:p-5 overflow-hidden">

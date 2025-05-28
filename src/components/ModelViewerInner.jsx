@@ -16,8 +16,6 @@ export default function ModelViewerInner({ src }) {
         camera-controls
         className="w-full max-w-lg h-[390px] rounded-lg"
       />
-
-
     </div>
   );
 }

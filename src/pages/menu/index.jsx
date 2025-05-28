@@ -1,18 +1,47 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { foodCategories, allFoods } from "../../data/foodData";
+import { api } from "../../lib/api";
 
 const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const [menuItems, setMenuItems] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchMenuItems = async () => {
+    const response = await api.getMenuItems();
+    setMenuItems(response);
+  };
+
+  useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        const items = await api.getMenuItems();
+        setMenuItems(items);
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching menu items:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMenuItems();
+  }, []);
+
+  const categories = [
+    "All",
+    ...new Set(menuItems.map((item) => item.category)),
+  ];
 
   const filteredCategories = foodCategories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleCategoryClick = (categoryId) => {
-    router.push(`/foods?categoryId=${categoryId}`);
+  const handleCategoryClick = (category) => {
+    router.push(`/foods?categoryId=${category}`);
   };
 
   return (
@@ -49,7 +78,7 @@ const MenuPage = () => {
         {filteredCategories.map((category) => (
           <div
             key={category.id}
-            onClick={() => handleCategoryClick(category.id)}
+            onClick={() => handleCategoryClick(category)}
             className="relative bg-white dark:bg-gray-800 rounded-4xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
           >
             {/* Image */}
