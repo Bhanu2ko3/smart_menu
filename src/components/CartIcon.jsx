@@ -21,12 +21,12 @@ export default function CartIcon({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="relative w-12 h-12 rounded-lg  backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 border  flex items-center justify-center hover:scale-105 active:scale-95 group"
+      className="relative w-12 border-orange-400 h-12 rounded-lg  backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center hover:scale-105 active:scale-95 group"
     >
       {/* Cart Icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5 text-gray-700 dark:text-gray-300 group-hover:text-orange-500 transition-colors duration-200"
+        className="h-5 w-5 text-gray-700 dark:text-orange-500 group-hover:text-gray-300 transition-colors duration-200"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -41,8 +41,8 @@ export default function CartIcon({ onClick }) {
 
       {/* Item Count Badge */}
       <span className={`
-        absolute -top-2 -right-2 bg-gradient-to-br from-orange-500 to-amber-500 
-        text-white text-xs font-medium rounded-full h-6 w-6 flex items-center justify-center 
+        absolute -top-1 -right-2 bg-gradient-to-br from-orange-500 to-amber-500 
+        text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center 
         shadow-md border border-white/20
         transition-all duration-300
         ${animate ? 'scale-125' : 'scale-100'}
