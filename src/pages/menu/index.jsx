@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import MenuFoodCard from "@/components/MenuFoodCard";
+import CategoryFoodCard from "@/components/CategoryFoodCard";
 
 const MenuPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +39,7 @@ const MenuPage = () => {
           return {
             _id: categoryName.toLowerCase().replace(/\s+/g, "-"),
             name: categoryName,
-            image: `/category-images/${imageFileName}` || "placeholder.png", 
+            image: `/category-images/${imageFileName}` || "placeholder.png",
           };
         });
 
@@ -53,14 +55,10 @@ const MenuPage = () => {
     fetchData();
   }, []);
 
-  const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter foods based on search query
+  const filteredFoods = foods.filter((food) =>
+    food.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const handleCategoryClick = (categoryName) => {
-    console.log("Navigating to category:", categoryName); // Debug log
-    router.push(`/foods?category=${encodeURIComponent(categoryName)}`);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -75,7 +73,7 @@ const MenuPage = () => {
               </span>
             </h1>
 
-            {/* Enhanced Search Bar */}
+            {/* Search Bar */}
             <div className="relative w-full max-w-2xl">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
@@ -94,7 +92,7 @@ const MenuPage = () => {
               </div>
               <input
                 type="text"
-                placeholder="Discover your next favorite dish..."
+                placeholder="Search foods..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-5 py-4 text-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300 hover:shadow-sm"
@@ -175,53 +173,14 @@ const MenuPage = () => {
         {/* Success State */}
         {!loading && !error && (
           <div className="space-y-10">
-            {/* Category Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCategories.map((category) => (
-                <div
-                  key={category._id}
-                  onClick={() => handleCategoryClick(category.name)}
-                  className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 active:translate-y-0 min-h-[220px]"
-                >
-                  {/* Category Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      onError={(e) => (e.target.src = "/placeholder-food.jpg")}
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                  </div>
-
-                  {/* Category Info */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-5">
-                    <div className="space-y-1.5">
-                      <h2 className="text-xl font-bold text-white group-hover:text-orange-300 transition-colors duration-200">
-                        {category.name}
-                      </h2>
-                      <div className="flex items-center space-x-2">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-500/20 text-orange-100">
-                          {
-                            foods.filter(
-                              (food) => food.category === category.name
-                            ).length
-                          }{" "}
-                          items
-                        </span>
-                        <span className="text-xs font-medium text-gray-300">
-                          View all →
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Hover Indicator */}
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-10 h-10 bg-orange-500/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+            {/* Search Results or Category Grid */}
+            {searchQuery ? (
+              filteredFoods.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="max-w-md mx-auto">
+                    <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                       <svg
-                        className="w-5 h-5 text-white"
+                        className="w-10 h-10 text-gray-400 dark:text-gray-500"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -229,49 +188,44 @@ const MenuPage = () => {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          strokeWidth={1.5}
+                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Empty State */}
-            {filteredCategories.length === 0 && (
-              <div className="text-center py-16">
-                <div className="max-w-md mx-auto">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-10 h-10 text-gray-400 dark:text-gray-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                      No foods found
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      We couldn't find any foods matching "{searchQuery}". Try a different search term.
+                    </p>
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg transition-colors duration-200"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                      Clear Search
+                    </button>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                    No matches found
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    We couldn't find any categories matching "{searchQuery}".
-                    Try a different search term.
-                  </p>
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg transition-colors duration-200"
-                  >
-                    Clear Search
-                  </button>
                 </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredFoods.map((food) => (
+                    <CategoryFoodCard
+                      key={food._id}
+                      food={food}
+                    />
+                  ))}
+                </div>
+              )
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categories.map((category) => (
+                  <MenuFoodCard
+                    key={category._id}
+                    category={category}
+                    foods={foods}
+                  />
+                ))}
               </div>
             )}
           </div>
