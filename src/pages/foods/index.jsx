@@ -1,16 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
+
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { useSearchParams } from "next/navigation";
+import CategoryFoodCard from "@/components/CategoryFoodCard";
+
 import MealBot from "@/components/MealBot";
 
 const FoodsByCategory = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [category, setCategory] = useState(null); // Initialize as null
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("price-asc"); // Default sort: price low to high
 
   // Base URL for the backend
@@ -67,6 +70,7 @@ const FoodsByCategory = () => {
     }
   }, [category]);
 
+
   // Filter and sort foods
   const filteredFoods = foods
     .filter((food) =>
@@ -86,6 +90,23 @@ const FoodsByCategory = () => {
           return 0;
       }
     });
+
+  // Sort foods
+  const sortedFoods = foods.sort((a, b) => {
+    switch (sortOption) {
+      case "price-asc":
+        return a.price - b.price;
+      case "price-desc":
+        return b.price - a.price;
+      case "name-asc":
+        return a.name.localeCompare(b.name);
+      case "name-desc":
+        return b.name.localeCompare(a.name);
+      default:
+        return 0;
+    }
+  });
+
 
   if (loading) {
     return (
@@ -138,41 +159,16 @@ const FoodsByCategory = () => {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-center bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-200 dark:to-white bg-clip-text text-transparent mb-6">
             {decodeURIComponent(category)}
           </h1>
-          <div className="relative max-w-md mx-auto">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-400 dark:text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search foods..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 text-base bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
-            />
-          </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Sort Dropdown - Moved to Content Area */}
+        {/* Sort Dropdown */}
         <div className="mb-6 flex justify-end">
           <div className="w-full sm:w-48">
             <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className=" p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white"
+              className="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 dark:text-white"
             >
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
@@ -181,7 +177,7 @@ const FoodsByCategory = () => {
             </select>
           </div>
         </div>
-        {filteredFoods.length === 0 ? (
+        {sortedFoods.length === 0 ? (
           <div className="text-center py-16 sm:py-20">
             <div className="max-w-sm mx-auto">
               <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
@@ -203,16 +199,21 @@ const FoodsByCategory = () => {
                 No foods found
               </h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+
                 We couldn't find any foods matching your search. Try adjusting
                 your search terms.
+
+                We couldn't find any foods in this category.
+
               </p>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredFoods.map((food) => (
-              <div
+            {sortedFoods.map((food) => (
+              <CategoryFoodCard
                 key={food._id}
+
                 onClick={() => {
                   console.log("Navigating to foodId:", food._id); // Debug log
                   router.push(`/foodOverview?foodId=${food._id}`);
@@ -289,12 +290,20 @@ const FoodsByCategory = () => {
                   </div>
                 </div>
               </div>
+
+                food={food}
+              />
+
             ))}
           </div>
         )}
       </div>
 
+
       
+
+      <MealBot />
+
     </div>
   );
 };
