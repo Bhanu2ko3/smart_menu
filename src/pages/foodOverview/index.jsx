@@ -134,8 +134,8 @@ export default function FoodOverview() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-      <div className="max-w-7xl mx-auto p-6 pt-16">
-        <div className="flex flex-col lg:flex-row gap-10">
+      <div className="max-w-7xl mx-auto p-6 pt-16 ">
+        <div className="flex flex-col lg:flex-row gap-10 mt-4">
           {/* Food Image & Model Viewer */}
           <div className="w-full lg:w-1/2">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-xl border border-gray-700/50">

@@ -15,7 +15,7 @@ const CategoryFoodCard = ({ food }) => {
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={food.imageUrl || "/placeholder.png"}
+          src={food.imageUrl || "/placeholder-food.jpg"}
           alt={food.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           onError={(e) => (e.target.src = "/placeholder.png")}
