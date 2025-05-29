@@ -285,7 +285,6 @@ const FoodsByCategory = () => {
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
-                    
                   </div>
                 </div>
               </div>
@@ -293,8 +292,6 @@ const FoodsByCategory = () => {
           </div>
         )}
       </div>
-
-      
     </div>
   );
 };
