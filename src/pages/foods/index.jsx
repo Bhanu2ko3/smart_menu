@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import MealBot from "@/components/MealBot"; 
+import MealBot from "@/components/MealBot";
 
 const FoodsByCategory = () => {
   const router = useRouter();
@@ -46,9 +46,11 @@ const FoodsByCategory = () => {
         console.log("Category from query:", category); // Debug log
 
         // Normalize category and food.category for case-insensitive matching
-        const decodedCategory = decodeURIComponent(category).toLowerCase().trim();
-        const filteredFoods = foodsData.filter((food) =>
-          food.category?.toLowerCase().trim() === decodedCategory
+        const decodedCategory = decodeURIComponent(category)
+          .toLowerCase()
+          .trim();
+        const filteredFoods = foodsData.filter(
+          (food) => food.category?.toLowerCase().trim() === decodedCategory
         );
         console.log("Filtered foods:", filteredFoods); // Debug log
 
@@ -67,7 +69,9 @@ const FoodsByCategory = () => {
 
   // Filter and sort foods
   const filteredFoods = foods
-    .filter((food) => food.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((food) =>
+      food.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     .sort((a, b) => {
       switch (sortOption) {
         case "price-asc":
@@ -98,7 +102,7 @@ const FoodsByCategory = () => {
 
   if (error || !category) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <div className="text-center py-16 sm:py-20">
           <div className="w-16 h-16 mx-auto mb-6 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
             <svg
@@ -119,7 +123,8 @@ const FoodsByCategory = () => {
             Error
           </h3>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            {error || "No category selected!"} Please try again later or contact support.
+            {error || "No category selected!"} Please try again later or contact
+            support.
           </p>
         </div>
       </div>
@@ -127,7 +132,7 @@ const FoodsByCategory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-center bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-200 dark:to-white bg-clip-text text-transparent mb-6">
@@ -198,7 +203,8 @@ const FoodsByCategory = () => {
                 No foods found
               </h3>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                We couldn't find any foods matching your search. Try adjusting your search terms.
+                We couldn't find any foods matching your search. Try adjusting
+                your search terms.
               </p>
             </div>
           </div>
@@ -215,7 +221,7 @@ const FoodsByCategory = () => {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src={food.imageUrl || "/placeholder.png"}
+                    src={food.imageUrl || "/placeholder-food.jpg"}
                     alt={food.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => (e.target.src = "/placeholder.png")}
@@ -279,7 +285,7 @@ const FoodsByCategory = () => {
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
-                    <MealBot />
+                    
                   </div>
                 </div>
               </div>
@@ -287,8 +293,8 @@ const FoodsByCategory = () => {
           </div>
         )}
       </div>
-      {/* Add MealBot at the root level */}
-      <MealBot />
+
+      
     </div>
   );
 };
