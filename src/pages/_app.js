@@ -5,6 +5,7 @@ import CartIcon from "@/components/CartIcon";
 import { CartProvider } from "@/contexts/CartContext";
 import { useState, useEffect } from "react";
 import CartModal from "@/components/CartModal";
+import MealBot from "@/components/MealBot";
 
 export default function App({ Component, pageProps }) {
   const [darkMode, setDarkMode] = useState(false);
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps }) {
         <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex items-center justify-between pointer-events-none">
           <div className="pointer-events-auto">
             <BackButton />
+            <MealBot />
           </div>
           <div className="flex items-center space-x-4 pointer-events-auto">
             <CartIcon onClick={openCart} />

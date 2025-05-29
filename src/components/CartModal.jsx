@@ -98,7 +98,7 @@ export default function CartModal({ isOpen, onClose }) {
 
   // Handle image load errors
   const handleImageError = (id) => {
-    setImageErrors((prev) => ({ ...prev, [id]: true }));
+    setImageErrors((prev) => ({ ...prev, [id]: true }));  
   };
 
   // Generate table numbers (example: 1 to 20)
