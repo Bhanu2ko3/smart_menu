@@ -6,6 +6,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { useState, useEffect } from "react";
 import CartModal from "@/components/CartModal";
 import MealBot from "@/components/MealBot";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }) {
   const [darkMode, setDarkMode] = useState(false);
@@ -17,7 +18,9 @@ export default function App({ Component, pageProps }) {
     if (savedMode !== null) {
       setDarkMode(savedMode === "true");
     } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
       setDarkMode(prefersDark);
     }
   }, []);
@@ -50,18 +53,17 @@ export default function App({ Component, pageProps }) {
         {/* Floating transparent header */}
         <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 flex items-center justify-between pointer-events-none">
           <div className="pointer-events-auto">
-            <BackButton />
             <MealBot />
+            <BackButton/>
           </div>
           <div className="flex items-center space-x-4 pointer-events-auto">
             <CartIcon onClick={openCart} />
-            
           </div>
         </header>
-        
+
         {/* Page content without padding/margin for header */}
         <Component {...pageProps} />
-        
+
         <CartModal isOpen={isCartOpen} onClose={closeCart} />
       </div>
     </CartProvider>
